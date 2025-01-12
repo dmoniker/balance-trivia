@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+      <link rel="icon" href="favicon.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia Game</title>
+  <style>
+
+    * {
+    margin: 0;
+    padding: 0;
+}
+
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      background-color: white;
+    }
+
+    .gradient-background.content-question, .gradient-background-flip.content-question{
+      background-position: 0 0vw !important; /* Move the background 20vw lower */
+      background-size: 100% calc(100% + 5vw) !important;
+      min-height: calc(100% + 5vw);
+    }
+
+    .gradient-background-flip {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to right, #F8F7FE, #CBCBCD)!important;
+    background-blend-mode: normal;
+}
+
+  .gradient-background {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to right, #CBCBCD, #F8F7FE);
+    background-blend-mode: normal;
+}
+
+#banner{
+    position: fixed; /* Changed from absolute to fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Ensure it covers the full height */
+    z-index: 11; /* Ensure it's above other content */
+     opacity: 1; /* Fully visible by default */
+    transition: opacity 0.5s ease;
+}
+
+.banner-hidden {
+    opacity: 0 !important; /* Fully transparent */
+    pointer-events: none; /* Prevent interaction while hidden */
+}
+
+@supports (font: -apple-system-body) {
+  html {
+    font: -apple-system-body;
+  }
+}
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+   
+  header {
+    color: #000;
+    padding: 0px 0;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center; /* Vertically center items */
+    z-index: 10;
+    justify-content: space-between;
+    position: relative;
+  }
+
+   
+
+     #back-button {
+      display: flex;
+      align-items: center;
+      margin-right: 10px; /* Add some spacing between the icon and title */
+       z-index: 10;
+    }
+
+    #top-title {
+      display: flex;
+      align-items: center;
+      flex: 1; /* Occupy remaining space */
+       z-index: 10;
+       justify-content: space-around;
+/*       margin-top:30vw;*/
+    }
+
+    #top-title h1{
+      font-size: 1.5rem;
+    }
+
+    #foot-title {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin: 0;
+       z-index: 10;
+    }
+
+    /* Main Styles */
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+       z-index: 10;
+    }
+
+    .question-container {
+      padding: 1rem;
+      text-align: center;
+      max-width: 100%;
+      width: 600px;
+      font-size: 1.1rem;
+       z-index: 10;
+    }
+
+     #prompt-container {
+      text-align: left;
+      margin: 16px;
+       z-index: 10;
+    }
+
+    .answer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 80%;
+      width: 600px;
+    }
+
+    .answer {
+      background-color: transparent;
+      border: 1px solid black;
+      border-radius: 35px;
+      color: black;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+       z-index: 10;
+    }
+
+    .answer:hover,
+    .answer:focus {
+     /* background-color: #007B34;
+      outline: none;
+      color: #fff;*/
+    }
+
+    @keyframes zoomBounceButton {
+    0% { transform: scale(1); }
+    75% { transform: scale(1.05); } /* Scale down to 80% */
+    100% { transform: scale(1); } /* Scale back to normal */
+    }
+
+    .correct {
+    /* Add existing styles for .correct, if any */
+    animation-name: zoomBounceButton;
+    animation-duration: 0.25s; /* Adjust duration as needed */
+    animation-timing-function: ease-out;
+    }
+
+    .answer.correct {
+      display: flex; /* Use flexbox */
+      position: relative;
+      justify-content: center;
+      background-color: #007B34;
+      color: #fff;
+      border: 1px solid #007B34;
+       z-index: 10;
+    }
+
+    .answer.correct::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-image: url('correct.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 8px;
+    }
+
+    .answer.incorrect {
+      display: flex; /* Use flexbox */
+      position: relative;
+      justify-content: center;
+      background-color: #D32F2F;
+          color: #fff;
+          border: 1px solid #D32F2F;
+           z-index: 10;
+    }
+
+    .answer.incorrect::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-image: url('close.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 8px;
+    }
+
+    .answer[disabled] {
+      cursor: default;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+      .prompt {
+          margin: 20px auto;
+          text-align: left;
+          width: calc(100vw - 32px);
+      }
+        
+        .response {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            column-gap: 12px;
+        }
+        
+      button {
+      display: block;
+      width: 100%;
+      background-color: #007B34;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 35px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 1.1rem;
+       z-index: 10;
+    }
+
+        
+        .button:disabled {
+            background-color: lightgray;
+            cursor: not-allowed;
+        }
+
+
+        #challenge-toggle2
+        {
+          display: block;
+      width: 100%;
+      background-color: transparent;
+      color: #007B34;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 35px;
+      cursor: pointer;
+      font-size: 1.1rem;
+       z-index: 10;
+        }
+
+  
+      #countdown {
+        margin:0  0  0 16px;
+        text-align: center;
+        font-size: 2rem;
+         z-index: 10;
+         position: relative;
+      }
+      
+      #game-over {
+        text-align: center;
+        font-size: 1.8rem;
+        display: none;
+        padding: 64px 0;
+        z-index: 10;
+        position: relative;
+      }
+
+      #page-link{
+        margin-bottom:32px;
+      }
+
+@keyframes zoomBounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.6); } /* Scale up to 120% */
+    75% { transform: scale(0.8); } /* Scale up to 120% */
+    100% { transform: scale(1); } /* Scale back to normal */
+}
+
+      /* Score Styles */
+    .score-container {
+      animation-fill-mode: forwards; /* Ensure the end state (90% scale) is retained after the animation */
+     /* display: flex;
+    flex-direction: column;
+     text-align: center;
+     letter-spacing: 5px;
+     font-weight: bold;
+     width: 100%;
+      align-items: center;
+  justify-content: space-around;
+   z-index: 10;*/
+    }
+
+    .score-label {
+      letter-spacing: 0px;
+      font-weight: normal;
+      text-transform: uppercase;
+      color: #3D4747;
+    }
+
+    .score-number {
+      font-size: 2rem;
+      margin-left: 1rem;
+    }
+
+.score-container .correct-count, .score-container .total-count {
+  font-size: 41px;
+  font-weight: 400;
+  padding-bottom:1px;
+}
+
+.score-label {
+  margin-top: 10px;
+  color: #3D4747;
+  width: 100%;
+  text-align: center;
+}
+
+/* Centered Circle with Coin Background */
+.gold-coin {
+  width: 70px;
+  height: 70px;
+  background-image: url('coin2.png'); /* Update with the correct path */
+  background-size: cover; /* Ensure the image covers the whole circle */
+  background-position: center; /* Center the image */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/* Centered Yellow Circle */
+.circle {
+  width: 70px;
+  height: 70px;
+  background-color: #ffe280;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom:8px;
+}
+
+
+
+.circle div{
+  text-align: center;
+}
+
+.slash{
+  font-size: 40px;
+  font-weight: 100;
+}
+
+ body {
+/*      background: linear-gradient(to bottom, #A9A9A9 0%, #D3D3D3 100%);*/
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+      height: 100vh;
+    }
+
+    /* Full-width Image Style */
+    .full-width-image {
+      display: block;
+      width: 100vw; /* 100% of the viewport width */
+      height: auto; /* Maintain aspect ratio */
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    #footer-top{
+      display: flex;
+    flex-direction: row;
+    z-index: 11;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    position: fixed;
+    bottom: 14px;
+    width: 100vw;
+    }
+
+    #overlay{
+      z-index: 20;
+    }
+    .vclass{
+      display: flex;
+      flex-direction: column;
+    }
+
+
+        #content2{
+        margin:0;
+        z-index: 1;
+      }
+
+      section{
+        margin: 16px 16px 48px 16px;
+        z-index: 1;
+        position: relative;
+      }
+     
+
+      main{
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+        margin-top:75vw;
+      }
+
+      button{
+        width: 80%;
+        border-radius: 8px;
+        margin: 0 auto;
+        padding: 10px;
+        font-size: 1.2rem;
+      }
+
+      h2{
+        margin-bottom: 8px;
+      }
+
+      ol{
+        margin-left:16px;
+      }
+      
+      header {
+  text-align: left;
+  animation: sway 9s ease-in-out 1;
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: rotateZ(0deg);
+  }
+  30%, 70% {
+    transform: rotateZ(3deg);
+  }
+  50% {
+    transform: rotateZ(-2deg);
+  }
+}
+
+       .norm {
+      background-color: #007B34;
+      border: 1px solid #007B34;
+      border-radius: 35px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+    }
+
+    .pre-header{
+      color: #3D4747;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      text-align: center;
+    }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    background-color: #F9F8F6;
+    border: 0px;
+    z-index:1;
+    margin-top: auto;
+    }
+
+footer button {
+    width: 80%; /* Adjust as needed */
+}
+
+.title{
+  font-size: 2rem;
+  padding: 0 16px;
+}
+
+ .full-bleed-image {
+    background-image: url('tandem-balance-kelsey-right.png');
+    background-size: 150%;
+    background-position: 50% 5%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease;
+  }
+
+ #background-video {
+  position: relative;
+  width: 100%;
+  height: auto;
+  z-index: 0;
+  transition: opacity 1s ease;
+  opacity: 1; /* Fully visible by default */
+}
+
+
+#video2 {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 20;
+    transition: opacity 1s ease;
+}
+
+      #header{
+        position: relative;
+      }
+
+#switch-message{
+    z-index: 20;
+    color: black;
+    position: relative;   /* Absolute positioning */
+    font-size: 3rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+    padding-top:64px;
+    position: relative;
+    top: -8px;
+    height: 100%;
+}
+
+#score-container{
+  position:absolute;
+  left: 50%;/* Position the left edge of the element at the center of the parent */
+  transform: translate(-50%, -50%);
+  top:26px;
+}
+
+#message-block{
+  z-index: 10;
+  position: relative;
+  margin-top: -8px;
+  padding: 10%;
+}
+
+#initial-countdown{
+    color: black;
+    font-size: 4rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+}
+
+#message{
+    color: black;
+    font-size: 1.5rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+}
+
+header, section{
+  position: relative;
+  top: -38px;
+}
+
+    </style>
+</head>
+<body >
+    <video id="background-video" autoplay loop muted playsinline><source src="single-leg-left.mp4" type="video/mp4">Your browser does not support the video tag.</video>
+  <div id="intro-section" class="gradient-background" style=" position: relative;top: -8px;">
+      <header >
+        <h1 class="title">Balance and Trivia</h1>
+      </header>
+      <section class="section">
+        <p style="margin-bottom: 16px;display: none;">Improve your balance and cognitive strength by challenging your hand, eye, mind and body coordination at the same time!</p>
+        <ol>
+          <li>Find a flat surface to stand on.</li>
+          <li>Balance on your right foot.</li>
+          <li>Answer the trivia question.</li>
+          <li>If correct, keep balancing.</li>
+          <li>If incorrect, switch feet.</li>
+          <li>You have 2 minutes.</li>
+        </ol>
+      </section>
+      <div style="height: 100px;"></div>
+      <footer>
+          <button class="norm" onclick="startGame();" class="answer">Begin</button>
+           <button id="challenge-toggle2" onclick="window.location.replace('game-tandem.html')" style="padding:16px 0">Try an easier exercise</button>
+      </footer>
+    </div>
+    <div id="message-block" style="display:none" class="gradient-background">
+<div id="message">Stand on your right foot</div>
+<div id="initial-countdown"></div>
+</div>
+
+
+
+<div id="content" style="display:none" class="gradient-background content-question">
+  <div id="header">
+    
+      <a href="javascript:location.reload()" id="back-button">
+        <img src="left-icon.png" alt="Back">
+      </a>
+      
+    <div id="challenge-toggle" style="display:none;">
+  + Challenge
+  </div>
+
+
+    
+   <!--  <div id="challenge-toggle" >
+  Make easy
+  </div> -->
+
+  </div>
+     
+      <div id="top-title">
+      <h1 id="foot-title">Right Foot</h1>
+    </div>
+
+  <h1 id="game-over">Game Over</h1>
+    <div id="footer-top">
+      <div id="countdown">2:00</div>
+  <div id="score-container" class="score-container">
+  <div class="circle"><div class="correct-count">0</div><div class="slash" style="display:none;">/</div><div class="total-count" style="display:none;">0</div></div>
+    </div>
+  <div id="pause"> 
+  <button id="pause-button" style="background: none; border: none; cursor: pointer; margin: 0 16px 0 0; padding: 0px; width: auto">
+    <img id="pause-button-img" src="pause.png" alt="Pause" style="width: 48px; height: 48px;">
+  </button>
+  </div>
+
+  </div>
+
+    <div id="banner" class="banner-hidden">
+      <video id="video2" autoplay loop muted playsinline src="single-leg-left.mp4" type="video/mp4">Your browser does not support the video tag.</video>
+  <p id="switch-message" class="gradient-background">Switch feet</p>
+  </div>
+  <main id="content2">
+
+  <div id="question-container" class="question-container">
+  <h2 class="question"></h2>
+  </div>
+
+  <div id="answer-container" class="answer-container">
+  <button class="answer"></button>
+  <button class="answer"></button>
+  <button class="answer"></button>
+  <button class="answer"></button>
+  </div>
+
+  <div id="prompt-container" style="display:none">
+     <div id="page-link" >
+  <button class="norm" onclick="javascript:location.reload()">Done</button>
+  </div>
+  <div class="prompt">
+  <p>Congratulations on balancing for 2 minutes.</p>
+  <p>Studies<sup>1</sup> show that doing cognitive tasks like trivia while balancing have been shown to improve balance, cognitive function, and reduce fall risk.</p>
+  <h3 style="margin: 24px 0 8px 0">References</h3>
+  <div style="overflow-wrap: break-word;">
+  Li KZ, Roudaia E, Lussier M, Bherer L, Leroux A, McKinley PA.
+  (2012) Gerontology. <i>Effects of dual-task training on postural control in the elderly: a systematic review.</i> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367902
+    </div>
+  </div>
+  </div>
+  </main> 
+</div>
+ 
+ <!--  <footer>
+    <p>&copy; 2023 Trivia Balance</p>
+  </footer> -->
+  <script src="trivia-data-expanded3.js"></script>
+  <script>
+let gameEnded = false;
+let isLeftLeg = false; // Start with the left leg image
+const easyQuestions = questions.filter(question => question.difficulty === "easy");
+let overlayTimeoutId; // Declare a variable to store the timeout ID for overlay display
+let bannerTimeoutId; // Declare a variable to store the timeout ID for banner display
+let isTimerPaused = false; // Track the pause state
+let countdownIntervalId; // Store the interval ID for the countdown
+let end = false;
+let includeHardQuestions = false; // New global variable
+let correctCount = 0;
+let totalCount = 0;
+let askedQuestions = [];
+let initialCountdown = 5;
+const countdownDuration = 120; // 2 minutes
+
+console.log("easyQuestions =" + easyQuestions.length);
+console.log("all questions = " + questions.length);
+
+//const easyQuestions = questions.filter(question => question.difficulty === "easy");
+// console.log("easyQuestions =" + easyQuestions.length);
+//console.log("all questions = " + questions.length);
+  const filteredQuestions = questions
+    .map(q => {
+      const { question, options, answer } = q;
+      return { question, options, answer };
+    });
+
+  const customStringify = objArray => {
+    return objArray.map(obj => {
+      const fields = Object.keys(obj)
+        .map(key => `  ${key}: ${JSON.stringify(obj[key])}`)
+        .join(',\n');
+      return `{\n${fields}\n}`;
+    }).join(',\n');
+  };
+
+  //console.log(`const filteredQuestions = [\n${customStringify(filteredQuestions)}\n];`);
+
+function startGame() {
+    // Cross dissolve background images
+  document.getElementById('intro-section').style.display = 'none';
+    //document.getElementById('img-back0').style.opacity = '0';
+    //document.getElementById('img-back').style.opacity = '1';
+
+    // Start the 5-second countdown before the main countdown
+    const countdownElement = document.getElementById('initial-countdown'); // Ensure this element exists
+    countdownElement.innerText = initialCountdown;
+    document.getElementById('message-block').style.display = 'block';
+     restartAndPlayVideo();
+
+    const initialCountdownInterval = setInterval(() => {
+        initialCountdown -= 1;
+        countdownElement.innerText = initialCountdown;
+
+        if (initialCountdown <= 0) {
+            clearInterval(initialCountdownInterval);
+            countdownElement.style.display = 'none';
+            document.getElementById('message-block').style.display = 'none';
+            
+            // Hide the intro section and start the main countdown
+            
+            document.getElementById('content').style.display = 'block';
+            startCountdown2(); // Ensure this function exists and starts the main timer
+            // Animate and reposition the video element
+            animateAndRepositionVideo();
+            pauseVideo();
+        }
+    }, 1000);
+}
+
+function animateAndRepositionVideo() {
+    // const video = document.getElementById('background-video');
+    // video.style.position = 'absolute';
+    // video.style.top = '0';
+    // video.style.transition = 'top 1s ease-out'; // Adjust timing and easing as needed
+    // setTimeout(() => {
+    //     video.style.top = '-25%';
+    // }, 0); // Timeout to ensure the transition is applied
+  const video = document.getElementById('background-video');
+  video.style.position = "absolute"
+  video.style.opacity = '0'; // Set opacity to 0 to hide the video
+}
+
+function restartAndPlayVideo() {
+    var video = document.getElementById('background-video');
+    video.currentTime = 0; // Reset the video to the beginning
+    video.play(); // Start playing the video
+}
+
+function pauseVideo() {
+    var video = document.getElementById('background-video');
+    video.pause();
+}
+
+function toggleGradientClasses() {
+    const elementsToToggle = document.querySelectorAll('.gradient-background'); // Elements that need to toggle
+    console.log("gradientFlip");
+    elementsToToggle.forEach(element => {
+        if (element.classList.contains('gradient-background-flip')) {
+            element.classList.remove('gradient-background-flip');
+        } else {
+            element.classList.add('gradient-background-flip');
+        }
+    });
+}
+
+function startCountdown(duration, display) {
+  let timer = duration;
+  let minutes, seconds;
+  countdownIntervalId = setInterval(function () {
+    if (!isTimerPaused) {
+      if (end) return;
+      timer--; // Decrement timer at the beginning of the loop
+
+      if (timer < 0) {
+        // Timer reached 0 or below, execute end logic
+        gameEnded = true; // Set the game ended flag
+        clearTimeout(bannerTimeoutId); // Clear the banner show timeout
+        document.getElementById('banner').style.display = 'none';
+        hideBanner(); // Immediately hide the banner
+        document.getElementById('score-container').style.textAlign = "left";
+        document.getElementById("pause-button").style.display = "none";
+        document.getElementById("game-over").style.display = "block";
+        document.getElementById("answer-container").style.display = "none";
+        document.getElementById("countdown").style.display = "none";
+        document.getElementById("question-container").style.display = "none";
+        document.getElementById("header").style.display = "none";
+        document.getElementById("prompt-container").style.display = "block";
+        document.getElementById("footer-top").style.position = "relative";
+        document.getElementById("footer-top").style.justifyContent = "center";
+        document.getElementById("content").style.position = "relative";
+        //document.getElementById("content").style.top = "55vw";
+        document.getElementById("content").classList.remove("content-question");
+        const scoreElement = document.getElementById('score-container'); 
+        scoreElement.style.position = "relative";
+        scoreElement.style.top = '0';
+        scoreElement.style.transform = 'scale(1)';
+        scoreElement.style.left = '0';
+       // document.getElementById('img-back').classList.remove("shrink-and-center");
+
+        // Hide the top title
+        document.getElementById("top-title").style.display = "none";
+
+        // Change the background image
+        //document.getElementById("img-back").src = "tandem-balance-kelsey-rest.png";
+
+        clearInterval(countdownIntervalId);
+        end = true;
+        // Apply the zoomBounce animation to the score-container
+        setTimeout(function() {
+          const scoreContainer = document.getElementById('score-container');
+          scoreContainer.style.animationName = 'zoomBounce';
+          scoreContainer.style.animationDuration = '.5s'; // You can adjust the duration
+          scoreContainer.style.animationTimingFunction = 'ease-out';
+        }, 200);
+        return; // Exit the function to prevent further execution
+      }
+
+      // Continue with the countdown display update
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+      minutes = minutes < 10 ? minutes.toString() : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      display.textContent = minutes + ":" + seconds;
+    }
+  }, 1000);
+}
+
+
+function togglePause() {
+  isTimerPaused = !isTimerPaused;
+  const pauseButtonImage = document.getElementById('pause-button-img'); // Assuming the image has this id
+
+  if (isTimerPaused) {
+    pauseButtonImage.src = 'play.png'; // Change to play image when paused
+  } else {
+    pauseButtonImage.src = 'pause.png'; // Change back to pause image when unpaused
+  }
+}
+
+// Add an event listener to the pause button
+document.getElementById('pause-button').addEventListener('click', togglePause);
+
+
+
+        function startCountdown2() {
+        const countdownDisplay = document.getElementById("countdown");
+        startCountdown(countdownDuration, countdownDisplay);
+      };
+
+ 
+
+
+
+      function toggleTitle() {
+        const title = document.getElementById("foot-title");
+        if (title.textContent === "Left Foot") {
+          title.textContent = "Right Foot";
+        } else {
+          title.textContent = "Left Foot";
+        }
+      }
+
+
+    // Shuffle an array randomly
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    function selectRandomQuestion(askedQuestions) {
+  let availableQuestions = includeHardQuestions ? questions : easyQuestions;
+  availableQuestions = availableQuestions.filter((question) => !askedQuestions.includes(question));
+  //console.log("available questions = " + availableQuestions.length);
+  return availableQuestions[Math.floor(Math.random() * availableQuestions.length)];
+}
+
+// New toggleChallenge function
+function toggleChallenge() {
+  includeHardQuestions = !includeHardQuestions;
+  document.getElementById('challenge-toggle').textContent = includeHardQuestions ? "Less hard" : "Harder";
+  refreshQuestions();
+}
+
+function refreshQuestions() {
+  askedQuestions = []; // Reset asked questions
+  correctCount = 0; // Reset correct count if needed
+  totalCount = 0; // Reset total count if needed
+  displayNewQuestion(); // Display a new question based on the updated question pool
+}
+
+function preloadImages(imageArray) {
+    imageArray.forEach(imageSrc => {
+        const img = new Image();
+        img.src = imageSrc;
+    });
+}
+
+function updateBackgroundVideo() {
+    const video = document.getElementById('background-video');
+    const source = video.querySelector('source'); // Get the source element
+
+    if (source) {
+        const currentSrc = source.getAttribute('src');
+        if (currentSrc.includes('single-leg-left.mp4')) {
+            source.src = 'single-leg-right.mp4';
+        } else {
+            source.src = 'single-leg-left.mp4';
+        }
+
+        video.load(); // Reload the video with the new source
+        video.play(); // Start playing the new video
+    } else {
+        console.error('Video source element not found');
+    }
+}
+
+function updateBannerVideo() {
+    const video2 = document.getElementById('video2');
+    if (video2) {
+        // Logic to determine the new source for video2
+        // This depends on how you want to change the video source
+        // For example, toggling between two sources:
+        if (video2.src.includes('single-leg-right.mp4')) {
+            video2.src = 'single-leg-left.mp4';
+        } else {
+            video2.src = 'single-leg-right.mp4';
+        }
+
+        video2.load();
+        video2.play();
+    } else {
+        console.error('Banner video element not found');
+    }
+}
+
+
+
+function showBanner() {
+    if (gameEnded) return; // Don't show the banner if the game has ended
+    const banner = document.getElementById('banner');
+    banner.classList.remove('banner-hidden');
+    document.getElementById('footer-top').style.display = "none";
+    document.getElementById('content2').style.opacity = "0";
+    document.getElementById('content').classList.remove('content-question');
+    console.log("remove content-question");
+    const currentStyle = window.getComputedStyle(document.getElementById('banner'));
+    bannerTimeoutId = setTimeout(hideBanner, 3000); // Schedule banner hiding
+}
+
+function hideBanner() {
+    const banner = document.getElementById('banner');
+    banner.classList.add('banner-hidden');
+    document.getElementById('content').classList.add('content-question');
+    document.getElementById('footer-top').style.display = "flex";
+    document.getElementById('content2').style.opacity = "1";
+    console.log("add content-question");
+    isLeftLeg = !isLeftLeg;
+    toggleTitle();
+     pauseVideo();
+}
+
+
+
+// Add event listener for challenge toggle
+document.getElementById('challenge-toggle').addEventListener('click', toggleChallenge);
+
+
+
+
+// Display a new question and its answer options
+function displayNewQuestion() {
+  // Select a random question from the availableQuestions array
+  const question = selectRandomQuestion(askedQuestions);
+
+  // If there are no more available questions,
+  // display the final score and end the game
+  if (!question) {
+  alert(`Game Over! You got ${correctCount} out of ${totalCount} correct.`);
+  return;
+  }
+
+  // Add the question to the askedQuestions array
+  askedQuestions.push(question);
+
+  // Shuffle the answer options randomly
+  shuffleArray(question.options);
+
+  // Display the question and its answer options
+  const questionContainer = document.querySelector(".question-container");
+  questionContainer.textContent = question.question;
+
+  const answerContainer = document.querySelector(".answer-container");
+  answerContainer.innerHTML = "";
+
+  //evaluate answer
+  question.options.forEach((option) => {
+  const answer = document.createElement("button");
+  answer.classList.add("answer");
+  answer.textContent = option;
+  answerContainer.appendChild(answer);
+  answer.addEventListener("click", () => {
+  totalCount++;
+
+  if (option === question.answer) { //correct answer
+    correctCount++;
+    answer.classList.add("correct");
+  } 
+  else //incorrect answer
+  {
+      // Show the incorrect answer
+      answer.classList.add("incorrect");
+
+      // Show the correct answer
+      const correctAnswer = answerContainer.querySelector(`.answer:not(.incorrect):not(:disabled):not(.correct)[data-answer="${question.answer}"]`);
+      if (correctAnswer) {
+          correctAnswer.classList.add("correct");
+      }
+
+         toggleGradientClasses();
+
+        // Update the second video in the banner
+        updateBannerVideo();
+
+         // Update the main background video
+        updateBackgroundVideo();
+
+      // Delayed display of the banner
+      setTimeout(showBanner, 1000); // Delay before the banner appears
+  }
+
+  // Disable all the answer buttons to prevent multiple clicks
+  answerContainer.querySelectorAll(".answer:not(.correct)").forEach((answer) => {
+    answer.disabled = true;
+  });
+
+  // Update the score display
+  const correctCountElement = document.querySelector(".correct-count");
+  const totalCountElement = document.querySelector(".total-count");
+  correctCountElement.textContent = correctCount;
+  totalCountElement.textContent = totalCount;
+
+  // Wait for 1 seconds before displaying the next question
+  setTimeout(displayNewQuestion, 1000);
+
+  });
+
+  answer.setAttribute("data-answer", option);
+  });
+}
+
+// Start the game by displaying the first question
+displayNewQuestion();
+
+  </script>
+</body>
+</html>
