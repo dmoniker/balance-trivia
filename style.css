@@ -1,20 +1,4 @@
- /* Global Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.5;
-      background-color: white;
-    }
-#banner{
-
-padding:40px;
-background-color: #fff;
-}
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
 @supports (font: -apple-system-body) {
   html {
@@ -32,3 +16,678 @@ background-color: #fff;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
   }
+
+  
+  * {
+    margin: 0;
+    padding: 0;
+}
+
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Quicksand', Arial, sans-serif;
+      line-height: 1.5;
+      background: linear-gradient(to bottom left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to right top, #ededed, #aeadb6);
+      background-blend-mode: normal;
+      max-width: 440px;
+      margin: 0 auto;
+      height: 100vh;
+    }
+    #content-container{
+      background-color: #fff;
+      height: 100%;
+    }
+
+    .gradient-background.content-question, .gradient-background-flip.content-question{
+      background-position: 0 0vw !important; /* Move the background 20vw lower */
+      background-size: 100% calc(100% + 5vw) !important;
+      min-height: calc(100% + 5vw);
+    }
+
+#banner{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    max-width: 440px;
+    padding: 0px;
+    background-color: #fff;
+}
+
+.banner-hidden {
+    opacity: 0 !important; /* Fully transparent */
+    pointer-events: none; /* Prevent interaction while hidden */
+}
+
+@supports (font: -apple-system-body) {
+  html {
+    font: -apple-system-body;
+  }
+}
+
+  #overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+   
+  header {
+    color: #000;
+    padding: 0px 0;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center; /* Vertically center items */
+    z-index: 10;
+    justify-content: space-between;
+    position: relative;
+  }
+
+   button {
+    font-family: 'Quicksand', Arial, sans-serif;
+   }
+
+     #back-button {
+      display: flex;
+      align-items: center;
+      margin-right: 10px; /* Add some spacing between the icon and title */
+       z-index: 10;
+    }
+
+    #top-title {
+      display: flex;
+      align-items: center;
+      flex: 1; /* Occupy remaining space */
+       z-index: 10;
+       justify-content: space-around;
+/*       margin-top:30vw;*/
+    }
+
+    #top-title h1{
+      font-size: 1.5rem;
+    }
+
+    #foot-title {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin: 0;
+       z-index: 10;
+    }
+
+    /* Main Styles */
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+       z-index: 10;
+    }
+
+    .question-container {
+      padding: 1rem;
+      text-align: center;
+      max-width: 100%;
+      width: 600px;
+      font-size: 1.1rem;
+       z-index: 10;
+    }
+
+     #prompt-container {
+      text-align: left;
+      margin: 16px;
+       z-index: 10;
+    }
+
+    .answer-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 80%;
+      width: 600px;
+    }
+
+    .answer {
+      background-color: transparent;
+      border: 1px solid black;
+      border-radius: var(--border-radius);
+      color: black;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+       z-index: 10;
+    }
+
+    .answer:hover,
+    .answer:focus {
+     /* background-color: #007B34;
+      outline: none;
+      color: #fff;*/
+    }
+
+    @keyframes zoomBounceButton {
+    0% { transform: scale(1); }
+    75% { transform: scale(1.05); } /* Scale down to 80% */
+    100% { transform: scale(1); } /* Scale back to normal */
+    }
+
+    .correct {
+    /* Add existing styles for .correct, if any */
+    animation-name: zoomBounceButton;
+    animation-duration: 0.25s; /* Adjust duration as needed */
+    animation-timing-function: ease-out;
+    }
+
+    .answer.correct {
+      display: flex; /* Use flexbox */
+      position: relative;
+      justify-content: center;
+      background-color: #007B34;
+      color: #fff;
+      border: 1px solid #007B34;
+       z-index: 10;
+    }
+
+    .answer.correct::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-image: url('correct.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 8px;
+    }
+
+    .answer.incorrect {
+      display: flex; /* Use flexbox */
+      position: relative;
+      justify-content: center;
+      background-color: #D32F2F;
+          color: #fff;
+          border: 1px solid #D32F2F;
+           z-index: 10;
+    }
+
+    .answer.incorrect::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background-image: url('close.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 8px;
+    }
+
+    .answer[disabled] {
+      cursor: default;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+      .prompt {
+          margin: 20px auto;
+          text-align: left;
+          width: calc(100% - 32px);
+      }
+        
+        .response {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            column-gap: 12px;
+        }
+        
+      button {
+      display: block;
+      width: 100%;
+      background-color: #007B34;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-size: 1.1rem;
+       z-index: 10;
+    }
+
+        
+        .button:disabled {
+            background-color: lightgray;
+            cursor: not-allowed;
+        }
+
+
+        #challenge-toggle2
+        {
+          display: block;
+      width: 100%;
+      background-color: transparent;
+      color: var(--primary-button-color); 
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 1.1rem;
+       z-index: 10;
+        }
+
+  
+      #countdown {
+        margin:0  0  0 16px;
+        text-align: center;
+        font-size: 2rem;
+         z-index: 10;
+         position: relative;
+      }
+      
+      #game-over {
+        text-align: center;
+        font-size: 1.8rem;
+        display: none;
+        padding: 64px 0;
+        z-index: 10;
+        position: relative;
+      }
+
+      #page-link{
+        margin-bottom:32px;
+      }
+
+@keyframes zoomBounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.6); } /* Scale up to 120% */
+    75% { transform: scale(0.8); } /* Scale up to 120% */
+    100% { transform: scale(1); } /* Scale back to normal */
+}
+
+      /* Score Styles */
+    .score-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-bottom:40px;
+    }
+
+    .score-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: var(--primary-circle-color);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .score-circle.small {
+      width: 120px;
+      height: 120px;
+      font-size: 0.8em;
+    }
+
+    .score-label {
+      font-size: 1.2em;
+      margin-bottom: 0px;
+    }
+
+    .score-label-today {
+      position: relative;
+      top: 8px;
+      font-size: 1.4em;
+    }
+
+    .score-value {
+      font-size: 2em;
+      font-weight: bold;
+    }
+
+    .score-value-today {
+      font-size: 3em;
+      font-weight: bold;
+    }
+
+.score-container .correct-count, .score-container .total-count {
+  font-size: 41px;
+  font-weight: 400;
+  padding-bottom:1px;
+}
+
+.score-label {
+  margin-top: 10px;
+  color: #3D4747;
+  width: 100%;
+  text-align: center;
+}
+
+.prompt p{
+  margin-bottom: 16px;
+}
+
+/* Centered Circle with Coin Background */
+.gold-coin {
+  width: 70px;
+  height: 70px;
+  background-image: url('coin2.png'); /* Update with the correct path */
+  background-size: cover; /* Ensure the image covers the whole circle */
+  background-position: center; /* Center the image */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  flex-direction: row;
+  justify-content: center;
+}
+
+/* Centered Yellow Circle */
+.circle {
+  width: 70px;
+  height: 70px;
+  background-color: var(--primary-circle-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom:8px;
+}
+
+
+
+.circle div{
+  text-align: center;
+}
+
+.slash{
+  font-size: 40px;
+  font-weight: 100;
+}
+
+    #footer-top{
+      display: flex;
+    flex-direction: row;
+    z-index: 11;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    position: fixed;
+    bottom: 14px;
+    width: 100vw;
+    max-width: 440px;
+    }
+
+    #overlay{
+      z-index: 20;
+    }
+    .vclass{
+      display: flex;
+      flex-direction: column;
+    }
+
+
+        #content2{
+        margin:0;
+        z-index: 1;
+      }
+
+      section{
+        margin: 16px 16px 48px 16px;
+        z-index: 1;
+        position: relative;
+      }
+     
+
+      main{
+        max-width: 600px;
+        position: relative;
+        z-index: 1;
+        margin-top:75vw;
+      }
+
+      button{
+        width: 80%;
+        border-radius: 8px;
+        margin: 0 auto;
+        padding: 10px;
+        font-size: 1.2rem;
+      }
+
+      h2{
+        margin-bottom: 8px;
+      }
+
+      ol{
+        margin-left:16px;
+      }
+      
+      header {
+  text-align: left;
+  animation: sway 9s ease-in-out 1;
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: rotateZ(0deg);
+  }
+  30%, 70% {
+    transform: rotateZ(3deg);
+  }
+  50% {
+    transform: rotateZ(-2deg);
+  }
+}
+
+       .norm {
+      background-color: var(--primary-button-color);
+      border: 1px solid var(--primary-button-color);
+      border-radius: var(--border-radius);
+      color: #fff;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease-in-out;
+      width: 100%;
+    }
+
+    .pre-header{
+      color: #3D4747;
+      text-transform: uppercase;
+      font-size: 0.8em;
+      text-align: center;
+    }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    background-color: #F9F8F6;
+    border: 0px;
+    z-index:1;
+    margin: auto auto 0 auto;
+    max-width: 440px;
+    }
+
+footer button {
+    width: 80%; /* Adjust as needed */
+}
+
+.title{
+  font-size: 2rem;
+  padding: 0 16px;
+}
+
+ .full-bleed-image {
+    background-image: url('tandem-balance-kelsey-right.png');
+    background-size: 150%;
+    background-position: 50% 5%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 1s ease;
+  }
+
+ #background-video {
+  position: relative;
+  width: 100%;
+  height: auto;
+  z-index: 0;
+  transition: opacity 1s ease;
+  opacity: 1; /* Fully visible by default */
+  max-width: 440px;
+  margin: auto;
+}
+
+
+#video2 {
+    position: relative;
+    width: 100%;
+    height: auto;
+    z-index: 20;
+    transition: opacity 1s ease;
+    max-width: 440px;
+    margin: auto;
+}
+
+      #header{
+        position: relative;
+      }
+
+#switch-message{
+    z-index: 20;
+    color: black;
+    position: relative;   /* Absolute positioning */
+    font-size: 3rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+    padding-top:6x;
+    position: relative;
+    top: -6px;
+    height: 100%;
+}
+
+#score-container{
+  position:absolute;
+  left: 50%;/* Position the left edge of the element at the center of the parent */
+  transform: translate(-50%, -50%);
+  top:26px;
+}
+
+#message-block{
+  z-index: 10;
+  position: relative;
+  margin-top: -8px;
+  padding: 0;
+}
+
+#initial-countdown{
+    color: black;
+    font-size: 4rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+}
+
+#message{
+    color: black;
+    font-size: 1.5rem;      /* Example: Large font size */
+    text-align: center;   /* Center align the text */
+}
+
+header, section{
+  position: relative;
+  top: 28px;
+}
+
+:root {
+  --primary-button-color: #800000;
+  --primary-circle-color: #ffbe80;
+  --border-radius: 12px;
+}
+
+/* For game-single-leg.html */
+.gradient-background-single {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to right, #d1d2d3, #f4f3fc);
+    background-blend-mode: normal;
+}
+
+.gradient-background-flip-single {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to left, #d1d2d3, #f4f3fc)!important;
+    background-blend-mode: normal;
+}
+
+/* For game-tandem.html */
+.gradient-background-tandem {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to right, #CBCBCD, #e2e1ea);
+    background-blend-mode: normal;
+}
+
+.gradient-background-flip-tandem {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1)), linear-gradient(to left, #CBCBCD, #e2e1ea)!important;
+    background-blend-mode: normal;
+}
+
+.countdown-bar {
+    height: 60px;
+    width: 100%;
+    margin-bottom: 34px;
+    background-color: var(--primary-button-color);
+    transform-origin: left;
+    animation: shrinkBar 5s linear forwards;
+}
+
+/* Message block version gets 5s animation */
+#message-block #countdown-bar {
+}
+
+/* Banner version gets 3s animation */
+#banner #countdown-bar2 {
+    /* animation: shrinkBar 3s linear forwards; */
+    margin-bottom: 0px;
+    position: relative;
+    margin-bottom: 16px;
+}
+
+@keyframes shrinkBar {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
