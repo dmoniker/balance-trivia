@@ -38,7 +38,6 @@
       max-width: 440px;
       margin: 0 auto;
       height: 100vh;
-      padding-top: env(safe-area-inset-top);
     }
     #content-container{
       background-color: #fff;
@@ -64,7 +63,6 @@
     max-width: 440px;
     padding: 0px;
     background-color: #fff;
-    padding-top: env(safe-area-inset-top);
 }
 
 .banner-hidden {
@@ -97,7 +95,6 @@
     z-index: 10;
     justify-content: space-between;
     position: relative;
-    padding-top: env(safe-area-inset-top);
   }
 
    button {
@@ -179,13 +176,6 @@
       transition: all 0.3s ease-in-out;
       width: 100%;
        z-index: 10;
-    }
-
-    .answer:hover,
-    .answer:focus {
-     /* background-color: #007B34;
-      outline: none;
-      color: #fff;*/
     }
 
     @keyframes zoomBounceButton {
@@ -344,16 +334,16 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      width: 150px;
-      height: 150px;
+      width: 130px;
+      height: 130px;
       border-radius: 50%;
       background: var(--primary-circle-color);
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
 
     .score-circle.small {
-      width: 120px;
-      height: 120px;
+      width: 110px;
+      height: 110px;
       font-size: 0.8em;
     }
 
@@ -602,7 +592,7 @@ footer button {
     text-align: center;   /* Center align the text */
     padding-top:6x;
     position: relative;
-    top: -6px;
+    top: -7px;
     height: 100%;
 }
 
@@ -674,10 +664,6 @@ header, section{
     animation: shrinkBar 5s linear forwards;
 }
 
-/* Message block version gets 5s animation */
-#message-block #countdown-bar {
-}
-
 /* Banner version gets 3s animation */
 #banner #countdown-bar2 {
     /* animation: shrinkBar 3s linear forwards; */
@@ -692,11 +678,5 @@ header, section{
     }
     to {
         transform: scaleX(0);
-    }
-}
-
-@supports (padding-top: env(safe-area-inset-top)) {
-    body {
-        padding-top: env(safe-area-inset-top);
     }
 }
