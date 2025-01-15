@@ -38,6 +38,7 @@
       max-width: 440px;
       margin: 0 auto;
       height: 100vh;
+      padding-top: env(safe-area-inset-top);
     }
     #content-container{
       background-color: #fff;
@@ -63,6 +64,7 @@
     max-width: 440px;
     padding: 0px;
     background-color: #fff;
+    padding-top: env(safe-area-inset-top);
 }
 
 .banner-hidden {
@@ -95,6 +97,7 @@
     z-index: 10;
     justify-content: space-between;
     position: relative;
+    padding-top: env(safe-area-inset-top);
   }
 
    button {
@@ -689,5 +692,11 @@ header, section{
     }
     to {
         transform: scaleX(0);
+    }
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+    body {
+        padding-top: env(safe-area-inset-top);
     }
 }
