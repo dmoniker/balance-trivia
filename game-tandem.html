@@ -1,176 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-      <link rel="icon" href="favicon.png" type="image/png">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trivia Game</title>
-  <link rel="stylesheet" href="style.css">
-
-</head>
-<body>
-  <div id="content-container">
-    <video id="background-video" autoplay loop muted playsinline><source src="tandem-front-right.mp4" type="video/mp4">Your browser does not support the video tag.</video>
-  <div id="intro-section" class="gradient-background-tandem" style=" position: relative;top: -8px;">
-      <header >
-        <h1 class="title">Balance and Trivia</h1>
-      </header>
-      <section class="section">
-        <p style="margin-bottom: 16px;display: none;">Improve your balance and cognitive strength by challenging your hand, eye, mind and body coordination at the same time!</p>
-        <ol>
-          <li>Find a flat surface to stand on.</li>
-          <li>Put your right heel in front of your left toes.</li>
-          <li>Answer the trivia question.</li>
-          <li>If correct, keep your feet as they are.</li>
-          <li>If incorrect, switch feet.</li>
-          <li>You have 2 minutes.</li>
-        </ol>
-      </section>
-      <div style="height: 200px;"></div>
-      <footer>
-          <button class="norm" onclick="startGame();" class="answer">Begin</button>
-          <button id="challenge-toggle2" onclick="window.location.replace('game-single-leg.html')" style="padding:16px 0">Try a harder exercise</button>
-      </footer>
-    </div>
-    <div id="message-block" style="display:none" class="gradient-background-tandem">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
+    />
+    <link rel="icon" href="favicon.png" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trivia Game</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="content-container">
+      <video id="background-video" autoplay loop muted playsinline>
+        <source src="tandem-front-right.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div
+        id="intro-section"
+        class="gradient-background-tandem"
+        style="position: relative; top: -8px"
+      >
+        <header>
+          <h1 class="title">Balance and Trivia</h1>
+        </header>
+        <section class="section">
+          <p style="margin-bottom: 16px; display: none">
+            Improve your balance and cognitive strength by challenging your
+            hand, eye, mind and body coordination at the same time!
+          </p>
+          <ol>
+            <li>Find a flat surface to stand on.</li>
+            <li>Put your right heel in front of your left toes.</li>
+            <li>Answer the trivia question.</li>
+            <li>If correct, keep your feet as they are.</li>
+            <li>If incorrect, switch feet.</li>
+            <li>You have 2 minutes.</li>
+          </ol>
+        </section>
+        <div style="height: 200px"></div>
+        <footer>
+          <button class="norm" onclick="startGame();" class="answer">
+            Begin
+          </button>
+          <button
+            id="challenge-toggle2"
+            onclick="window.location.replace('game-single-leg.html')"
+            style="padding: 16px 0"
+          >
+            Try a harder exercise
+          </button>
+        </footer>
+      </div>
+      <div
+        id="message-block"
+        style="display: none"
+        class="gradient-background-tandem"
+      >
         <div id="countdown-bar" class="countdown-bar"></div>
         <div id="message">Place your right foot forward</div>
         <div id="initial-countdown"></div>
-    </div>
+      </div>
 
+      <div
+        id="content"
+        style="display: none"
+        class="gradient-background-tandem content-question"
+      >
+        <div id="header">
+          <a href="javascript:location.reload()" id="back-button">
+            <img src="left-icon.png" alt="Back" />
+          </a>
 
+          <div id="challenge-toggle" style="display: none">+ Challenge</div>
 
-<div id="content" style="display:none" class="gradient-background-tandem content-question">
-  <div id="header">
-    
-      <a href="javascript:location.reload()" id="back-button">
-        <img src="left-icon.png" alt="Back">
-      </a>
-      
-    <div id="challenge-toggle" style="display:none;">
-  + Challenge
-  </div>
-
-
-    
-   <!--  <div id="challenge-toggle" >
+          <!--  <div id="challenge-toggle" >
   Make easy
   </div> -->
+        </div>
 
-  </div>
-     
-      <div id="top-title">
-      <h1 id="foot-title">Right Foot</h1>
-    </div>
+        <div id="top-title">
+          <h1 id="foot-title">Right Foot</h1>
+        </div>
 
-  <h1 id="game-over">Game Over</h1>
-    <div id="footer-top">
-      <div id="countdown">2:00</div>
-  <div id="score-container" class="score-container">
-  <div class="circle"><div class="correct-count">0</div><div class="slash" style="display:none;">/</div><div class="total-count" style="display:none;">0</div></div>
-    </div>
-  <div id="pause"> 
-  <button id="pause-button" style="background: none; border: none; cursor: pointer; margin: 0 16px 0 0; padding: 0px; width: auto">
-    <img id="pause-button-img" src="pause.png" alt="Pause" style="width: 48px; height: 48px;">
-  </button>
-  </div>
+        <h1 id="game-over">Game Over</h1>
+        <div id="footer-top">
+          <div id="countdown">2:00</div>
+          <div id="score-container" class="score-container">
+            <div class="circle">
+              <div class="correct-count">0</div>
+              <div class="slash" style="display: none">/</div>
+              <div class="total-count" style="display: none">0</div>
+            </div>
+          </div>
+          <div id="pause">
+            <button
+              id="pause-button"
+              style="
+                background: none;
+                border: none;
+                cursor: pointer;
+                margin: 0 16px 0 0;
+                padding: 0px;
+                width: auto;
+              "
+            >
+              <img
+                id="pause-button-img"
+                src="pause.png"
+                alt="Pause"
+                style="width: 48px; height: 48px"
+              />
+            </button>
+          </div>
+        </div>
 
-  </div>
-
-    <div id="banner" class="banner-hidden">
-        <video id="video2" autoplay loop muted playsinline src="tandem-front-right.mp4" type="video/mp4">Your browser does not support the video tag.</video>
-        <div id="switch-message" class="gradient-background-tandem">
+        <div id="banner" class="banner-hidden">
+          <video
+            id="video2"
+            autoplay
+            loop
+            muted
+            playsinline
+            src="tandem-front-right.mp4"
+            type="video/mp4"
+          >
+            Your browser does not support the video tag.
+          </video>
+          <div id="switch-message" class="gradient-background-tandem">
             <div id="countdown-bar2" class="countdown-bar"></div>
             Switch feet
+          </div>
         </div>
-    </div>
-  <main id="content2">
+        <main id="content2">
+          <div id="question-container" class="question-container">
+            <h2 class="question"></h2>
+          </div>
 
-  <div id="question-container" class="question-container">
-  <h2 class="question"></h2>
-  </div>
+          <div id="answer-container" class="answer-container">
+            <button class="answer"></button>
+            <button class="answer"></button>
+            <button class="answer"></button>
+            <button class="answer"></button>
+          </div>
 
-  <div id="answer-container" class="answer-container">
-  <button class="answer"></button>
-  <button class="answer"></button>
-  <button class="answer"></button>
-  <button class="answer"></button>
-  </div>
-
-  <div id="prompt-container" style="display:none">
-     <div id="page-link" >
-  <button class="norm" onclick="javascript:location.reload()">Done</button>
-  </div>
-  <div class="prompt">
-  <p>Congratulations on balancing for 2 minutes.</p>
-  <!-- <p>Doing cognitive tasks like trivia while balancing have been shown to improve balance, cognitive function, and reduce fall risk.</p> -->
-  <p>Do this exercise 3 times a week, or even daily to improve your balance. And your trivia skills!</p>
-   <!-- <h3 style="margin: 24px 0 8px 0">References</h3>
+          <div id="prompt-container" style="display: none">
+            <div id="page-link">
+              <button class="norm" onclick="javascript:location.reload()">
+                Done
+              </button>
+            </div>
+            <div class="prompt">
+              <p>Congratulations on balancing for 2 minutes.</p>
+              <!-- <p>Doing cognitive tasks like trivia while balancing have been shown to improve balance, cognitive function, and reduce fall risk.</p> -->
+              <p>
+                Do this exercise 3 times a week, or even daily to improve your
+                balance. And your trivia skills!
+              </p>
+              <!-- <h3 style="margin: 24px 0 8px 0">References</h3>
   <div style="overflow-wrap: break-word;">
   Li KZ, Roudaia E, Lussier M, Bherer L, Leroux A, McKinley PA.
   (2012) Gerontology. <i>Effects of dual-task training on postural control in the elderly: a systematic review.</i> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367902
     </div> -->
-  </div>
-  </div>
-  </main> 
-</div>
-</div>
- <!--  <footer>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!--  <footer>
     <p>&copy; 2023 Trivia Balance</p>
   </footer> -->
-  <script src="trivia-data-expanded3.js"></script>
-  <script src="gameplay.js"></script>
-  <script>
-    function updateBackgroundVideo() {
-    const video = document.getElementById('background-video');
-    const source = video.querySelector('source'); // Get the source element
+    <script src="trivia-data-expanded3.js"></script>
+    <script src="gameplay.js"></script>
+    <script>
+      function updateBackgroundVideo() {
+        const video = document.getElementById("background-video");
+        const source = video.querySelector("source"); // Get the source element
 
-    if (source) {
-        const currentSrc = source.getAttribute('src');
-        if (currentSrc.includes('tandem-front-left.mp4')) {
-            source.src = 'tandem-front-right.mp4';
+        if (source) {
+          const currentSrc = source.getAttribute("src");
+          if (currentSrc.includes("tandem-front-left.mp4")) {
+            source.src = "tandem-front-right.mp4";
+          } else {
+            source.src = "tandem-front-left.mp4";
+          }
+
+          video.load(); // Reload the video with the new source
+          video.play(); // Start playing the new video
         } else {
-            source.src = 'tandem-front-left.mp4';
+          console.error("Video source element not found");
         }
+      }
 
-        video.load(); // Reload the video with the new source
-        video.play(); // Start playing the new video
-    } else {
-        console.error('Video source element not found');
-    }
-}
+      function updateBannerVideo() {
+        const video2 = document.getElementById("video2");
+        if (video2) {
+          // Logic to determine the new source for video2
+          // This depends on how you want to change the video source
+          // For example, toggling between two sources:
+          if (video2.src.includes("tandem-front-right.mp4")) {
+            video2.src = "tandem-front-left.mp4";
+          } else {
+            video2.src = "tandem-front-right.mp4";
+          }
 
-function updateBannerVideo() {
-    const video2 = document.getElementById('video2');
-    if (video2) {
-        // Logic to determine the new source for video2
-        // This depends on how you want to change the video source
-        // For example, toggling between two sources:
-        if (video2.src.includes('tandem-front-right.mp4')) {
-            video2.src = 'tandem-front-left.mp4';
+          video2.load();
+          video2.play();
         } else {
-            video2.src = 'tandem-front-right.mp4';
+          console.error("Banner video element not found");
         }
+      }
 
-        video2.load();
-        video2.play();
-    } else {
-        console.error('Banner video element not found');
-    }
-}
+      function toggleGradientClasses() {
+        const elementsToToggle = document.querySelectorAll(
+          ".gradient-background-tandem"
+        ); // Elements that need to toggle
 
-function toggleGradientClasses() {
-    const elementsToToggle = document.querySelectorAll('.gradient-background-tandem'); // Elements that need to toggle
-
-    elementsToToggle.forEach(element => {
-        if (element.classList.contains('gradient-background-flip-tandem')) {
-            element.classList.remove('gradient-background-flip-tandem');
-        } else {
-            element.classList.add('gradient-background-flip-tandem');
-        }
-    });
-}
-  </script>
-</body>
+        elementsToToggle.forEach((element) => {
+          if (element.classList.contains("gradient-background-flip-tandem")) {
+            element.classList.remove("gradient-background-flip-tandem");
+          } else {
+            element.classList.add("gradient-background-flip-tandem");
+          }
+        });
+      }
+    </script>
+  </body>
 </html>
