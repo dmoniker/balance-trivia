@@ -189,10 +189,10 @@ main {
   }
   75% {
     transform: scale(1.05);
-  } /* Scale down to 80% */
+  } /* Scale up to 105% */
   100% {
-    transform: scale(8);
-  } /* Scale back to normal */
+    transform: scale(1);
+  }
 }
 
 .correct {
