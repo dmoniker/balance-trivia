@@ -17,13 +17,9 @@
         <source src="single-leg-left.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-      <div
-        id="intro-section"
-        class="gradient-background-single gradient-background-flip-single"
-        style="position: relative; top: -8px"
-      >
+      <div id="intro-section">
         <header>
-          <h1 class="title">Balance and Trivia!</h1>
+          <h1 class="title text">Balance & Trivia</h1>
         </header>
         <section class="section">
           <p style="margin-bottom: 16px; display: none">
@@ -31,25 +27,24 @@
             hand, eye, mind and body coordination at the same time!
           </p>
           <ol>
-            <li>Find a flat surface to stand on.</li>
-            <li>Balance on your right foot.</li>
-            <li>Answer the trivia question.</li>
-            <li>If correct, keep balancing.</li>
-            <li>If incorrect, switch feet.</li>
-            <li>You have 2 minutes.</li>
+            <li>Find a flat surface to stand on</li>
+            <li>Balance on your right foot</li>
+            <li>Answer the trivia question</li>
+            <li>If correct, keep balancing</li>
+            <li>If incorrect, switch feet</li>
           </ol>
         </section>
         <div style="height: 200px"></div>
         <footer>
-          <button class="norm" onclick="startGame();" class="answer">
-            Begin
-          </button>
           <button
             id="challenge-toggle2"
             onclick="window.location.replace('game-tandem.html')"
             style="padding: 16px 0"
           >
-            Try an easier exercise
+            Easier exercise
+          </button>
+          <button class="norm" onclick="startGame();" class="answer">
+            Begin
           </button>
         </footer>
       </div>
@@ -58,30 +53,27 @@
         style="display: none"
         class="gradient-background-single gradient-background-flip-single"
       >
-        <div id="countdown-bar" class="countdown-bar"></div>
-        <div id="message">Stand on your right foot</div>
+        <div id="message">Stand on right foot</div>
+        <div class="timer" id="countdown-ring">
+          <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
+            <circle class="timer-circle-bg" cx="100" cy="100" r="90"></circle>
+            <circle class="timer-circle" cx="100" cy="100" r="90"></circle>
+          </svg>
+          <div class="timer-text" id="countdown-number">3</div>
+        </div>
         <div id="initial-countdown"></div>
       </div>
 
-      <div
-        id="content"
-        style="display: none"
-        class="gradient-background-single content-question"
-      >
+      <div id="content" style="display: none" class="text-2 content-question">
         <div id="header">
           <a href="javascript:location.reload()" id="back-button">
-            <img src="left-icon.png" alt="Back" />
+            <img
+              src="left-icon.png"
+              alt="Back"
+              style="filter: brightness(0) invert(1)"
+            />
           </a>
-
-          <div id="challenge-toggle" style="display: none">+ Challenge</div>
-
-          <!--  <div id="challenge-toggle" >
-  Make easy
-  </div> -->
-        </div>
-
-        <div id="top-title">
-          <h1 id="foot-title">Right Foot</h1>
+          <h1 id="foot-title">Stand on right foot</h1>
         </div>
 
         <h1 id="game-over">Game Over</h1>
@@ -116,26 +108,6 @@
           </div>
         </div>
 
-        <div id="banner" class="banner-hidden">
-          <video
-            id="video2"
-            autoplay
-            loop
-            muted
-            playsinline
-            src="single-leg-left.mp4"
-            type="video/mp4"
-          >
-            Your browser does not support the video tag.
-          </video>
-          <div
-            id="switch-message"
-            class="gradient-background-single gradient-background-flip-single"
-          >
-            <div id="countdown-bar2" class="countdown-bar"></div>
-            Switch feet
-          </div>
-        </div>
         <main id="content2">
           <div id="question-container" class="question-container">
             <h2 class="question"></h2>
@@ -156,16 +128,10 @@
             </div>
             <div class="prompt">
               <p>Congratulations on balancing for 2 minutes.</p>
-              <!-- <p>Doing cognitive tasks like trivia while balancing have been shown to improve balance, cognitive function, and reduce fall risk.</p> -->
               <p>
                 Do this exercise 3 times a week, or even daily to improve your
                 balance. And your trivia skills!
               </p>
-              <!-- <h3 style="margin: 24px 0 8px 0">References</h3>
-  <div style="overflow-wrap: break-word;">
-  Li KZ, Roudaia E, Lussier M, Bherer L, Leroux A, McKinley PA.
-  (2012) Gerontology. <i>Effects of dual-task training on postural control in the elderly: a systematic review.</i> https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5367902
-    </div> -->
             </div>
           </div>
         </main>
@@ -176,58 +142,5 @@
   </footer> -->
     <script src="trivia-data-expanded3.js"></script>
     <script src="gameplay.js"></script>
-    <script>
-      function updateBackgroundVideo() {
-        const video = document.getElementById("background-video");
-        const source = video.querySelector("source"); // Get the source element
-
-        if (source) {
-          const currentSrc = source.getAttribute("src");
-          if (currentSrc.includes("single-leg-left.mp4")) {
-            source.src = "single-leg-right.mp4";
-          } else {
-            source.src = "single-leg-left.mp4";
-          }
-
-          video.load(); // Reload the video with the new source
-          video.play(); // Start playing the new video
-        } else {
-          console.error("Video source element not found");
-        }
-      }
-
-      function updateBannerVideo() {
-        const video2 = document.getElementById("video2");
-        if (video2) {
-          // Logic to determine the new source for video2
-          // This depends on how you want to change the video source
-          // For example, toggling between two sources:
-          if (video2.src.includes("single-leg-right.mp4")) {
-            video2.src = "single-leg-left.mp4";
-          } else {
-            video2.src = "single-leg-right.mp4";
-          }
-
-          video2.load();
-          video2.play();
-        } else {
-          console.error("Banner video element not found");
-        }
-      }
-
-      function toggleGradientClasses() {
-        const elementsToToggle = document.querySelectorAll(
-          ".gradient-background-single"
-        ); // Elements that need to toggle
-
-        elementsToToggle.forEach((element) => {
-          if (element.classList.contains("gradient-background-flip-single")) {
-            element.classList.remove("gradient-background-flip-single");
-          } else {
-            element.classList.add("gradient-background-flip-single");
-          }
-        });
-      }
-    </script>
   </body>
 </html>

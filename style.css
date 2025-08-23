@@ -32,6 +32,7 @@
 body {
   font-family: "Quicksand", Arial, sans-serif;
   line-height: 1.5;
+  font-size: 1.3rem;
   background: linear-gradient(
       to bottom left,
       rgba(255, 255, 255, 0),
@@ -42,6 +43,7 @@ body {
   max-width: 440px;
   margin: 0 auto;
   height: 100vh;
+  color: white;
 }
 #content-container {
   background-color: #fff;
@@ -92,7 +94,6 @@ body {
 }
 
 header {
-  color: #000;
   padding: 0px 0;
   margin-bottom: 1rem;
   display: flex;
@@ -100,10 +101,6 @@ header {
   z-index: 10;
   justify-content: space-between;
   position: relative;
-}
-
-button {
-  font-family: "Quicksand", Arial, sans-serif;
 }
 
 #back-button {
@@ -123,7 +120,7 @@ button {
 }
 
 #top-title h1 {
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 #foot-title {
@@ -150,8 +147,10 @@ main {
   text-align: center;
   max-width: 100%;
   width: 600px;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
+  font-weight: 900;
   z-index: 10;
+  margin: 170px 0 120px 0;
 }
 
 #prompt-container {
@@ -171,11 +170,11 @@ main {
 
 .answer {
   background-color: transparent;
-  border: 1px solid black;
+  border: 1px solid white;
   border-radius: var(--border-radius);
-  color: black;
+  color: white;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.3rem;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
   transition: all 0.3s ease-in-out;
@@ -269,7 +268,6 @@ footer p {
 
 button {
   display: block;
-  width: 100%;
   background-color: #007b34;
   color: #fff;
   border: none;
@@ -277,8 +275,9 @@ button {
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: background-color 0.3s;
-  font-size: 1.1rem;
   z-index: 10;
+  font-size: 1.3rem;
+  font-family: "Quicksand", Arial, sans-serif;
 }
 
 .button:disabled {
@@ -288,14 +287,12 @@ button {
 
 #challenge-toggle2 {
   display: block;
-  width: 100%;
   background-color: transparent;
   color: var(--primary-button-color);
   border: none;
   padding: 10px 20px;
   border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 1.1rem;
   z-index: 10;
 }
 
@@ -451,7 +448,7 @@ button {
   width: 100%;
   align-items: center;
   position: fixed;
-  bottom: 14px;
+  bottom: 24px;
   width: 100vw;
   max-width: 440px;
 }
@@ -470,9 +467,11 @@ button {
 }
 
 section {
-  margin: 16px 16px 48px 16px;
+  margin: 32px;
   z-index: 1;
   position: relative;
+  padding-top: 200px;
+  line-height: 2;
 }
 
 main {
@@ -480,14 +479,6 @@ main {
   position: relative;
   z-index: 1;
   margin-top: 75vw;
-}
-
-button {
-  width: 80%;
-  border-radius: 8px;
-  margin: 0 auto;
-  padding: 10px;
-  font-size: 1.2rem;
 }
 
 h2 {
@@ -499,8 +490,28 @@ ol {
 }
 
 header {
-  text-align: left;
-  animation: sway 9s ease-in-out 1;
+  text-align: center;
+  position: relative;
+  top: calc(40% - 100px);
+  /* animation: sway 9s ease-in-out 1; */
+}
+
+.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(4px); /* Blurs the background behind the text */
+}
+
+.text-2 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(10px); /* Blurs the background behind the text */
+  width: 100%;
+  height: 100%;
 }
 
 @keyframes sway {
@@ -521,13 +532,12 @@ header {
   background-color: var(--primary-button-color);
   border: 1px solid var(--primary-button-color);
   border-radius: var(--border-radius);
-  color: #fff;
+  color: #232e2e;
   cursor: pointer;
-  font-size: 1rem;
   font-weight: bold;
   padding: 0.75rem 1.5rem;
   transition: all 0.3s ease-in-out;
-  width: 100%;
+  min-width: 150px;
 }
 
 .pre-header {
@@ -539,24 +549,23 @@ header {
 
 footer {
   position: fixed;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
   text-align: center;
-  padding: 16px;
-  background-color: #f9f8f6;
+  padding: 32px;
   border: 0px;
   z-index: 1;
   margin: auto auto 0 auto;
   max-width: 440px;
-}
-
-footer button {
-  width: 80%; /* Adjust as needed */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.8rem;
   padding: 0 16px;
+  width: 100%;
 }
 
 .full-bleed-image {
@@ -573,7 +582,7 @@ footer button {
 }
 
 #background-video {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: auto;
   z-index: 0;
@@ -594,12 +603,67 @@ footer button {
 }
 
 #header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Start with the arrow on the left */
+  width: 100vw; /* Use full viewport width */
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative; /* Establish positioning context */
+  border-bottom: 0.5px solid white;
+}
+
+.timer {
   position: relative;
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.timer-svg {
+  transform: rotate(-90deg);
+}
+
+.timer-circle-bg {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 10;
+}
+
+.timer-circle {
+  fill: none;
+  stroke: white;
+  stroke-width: 10;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4em;
+  color: white;
+}
+
+#back-button {
+  flex-shrink: 0;
+  margin-right: 20px; /* Add spacing between arrow and title */
+}
+
+#foot-title {
+  flex-grow: 1;
+  text-align: center;
+  margin: 0;
+  position: absolute; /* Position title independently */
+  left: 50%; /* Move to the horizontal center of the viewport */
+  transform: translateX(-50%); /* Adjust for the title's width */
+  width: max-content; /* Ensure the title only takes its content width */
+  color: white; /* Match the white text from the image */
 }
 
 #switch-message {
   z-index: 20;
-  color: black;
+  color: white;
   position: relative; /* Absolute positioning */
   font-size: 3rem; /* Example: Large font size */
   text-align: center; /* Center align the text */
@@ -619,91 +683,33 @@ footer button {
 #message-block {
   z-index: 10;
   position: relative;
-  margin-top: -8px;
   padding: 0;
+  top: 60%;
 }
 
 #initial-countdown {
-  color: black;
+  color: white;
   font-size: 4rem; /* Example: Large font size */
   text-align: center; /* Center align the text */
 }
 
 #message {
-  color: black;
-  font-size: 1.5rem; /* Example: Large font size */
+  color: white;
+  font-size: 2.5rem; /* Example: Large font size */
   text-align: center; /* Center align the text */
+  margin-bottom: 50px;
 }
 
 header,
 section {
   position: relative;
-  top: 28px;
+  top: 300px;
 }
 
 :root {
-  --primary-button-color: #800000;
+  --primary-button-color: #fff;
   --primary-circle-color: #ffbe80;
-  --border-radius: 12px;
-}
-
-/* For game-single-leg.html */
-.gradient-background-single {
-  background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 1)
-    ),
-    linear-gradient(to right, #d1d2d3, #f4f3fc);
-  background-blend-mode: normal;
-}
-
-.gradient-background-flip-single {
-  background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 1)
-    ),
-    linear-gradient(to left, #d1d2d3, #f4f3fc) !important;
-  background-blend-mode: normal;
-}
-
-/* For game-tandem.html */
-.gradient-background-tandem {
-  background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 1)
-    ),
-    linear-gradient(to right, #cbcbcd, #e2e1ea);
-  background-blend-mode: normal;
-}
-
-.gradient-background-flip-tandem {
-  background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 1)
-    ),
-    linear-gradient(to left, #cbcbcd, #e2e1ea) !important;
-  background-blend-mode: normal;
-}
-
-.countdown-bar {
-  height: 60px;
-  width: 100%;
-  margin-bottom: 34px;
-  background-color: var(--primary-button-color);
-  transform-origin: left;
-  animation: shrinkBar 5s linear forwards;
-}
-
-/* Banner version gets 3s animation */
-#banner #countdown-bar2 {
-  /* animation: shrinkBar 3s linear forwards; */
-  margin-bottom: 0px;
-  position: relative;
-  margin-bottom: 16px;
+  --border-radius: 50px;
 }
 
 @keyframes shrinkBar {
