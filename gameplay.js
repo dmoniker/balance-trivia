@@ -1,7 +1,9 @@
 const tandemLeftVideo = "tandem-front-left.mp4";
 const tandemRightVideo = "tandem-front-right.mp4";
-const singleLegLeftVideo = "single-leg-left-4K.mp4";
-const singleLegRightVideo = "single-leg-right-4K.mp4";
+const singleLegLeftVideo =
+  "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
+const singleLegRightVideo =
+  "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
 let gameEnded = false;
 let isLeftLeg = false;
 const easyQuestions = questions.filter(
@@ -385,9 +387,11 @@ function updateBackgroundVideo() {
   if (source) {
     const currentSrc = source.getAttribute("src");
     if (currentSrc.includes("single-leg-left")) {
-      source.src = "single-leg-right-4K.mp4";
+      source.src =
+        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
     } else {
-      source.src = "single-leg-left-4K.mp4";
+      source.src =
+        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
     }
 
     video.load();
@@ -401,9 +405,11 @@ function updateBannerVideo() {
   const video2 = document.getElementById("video2");
   if (video2) {
     if (video2.src.includes("single-leg-right")) {
-      video2.src = "single-leg-left-4K.mp4";
+      video2.src =
+        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
     } else {
-      video2.src = "single-leg-right-4K.mp4";
+      video2.src =
+        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
     }
 
     video2.load();
