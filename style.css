@@ -6,6 +6,10 @@
   }
 }
 
+html {
+  font-size: 12px; /* Adjust this value to fine-tune text size */
+}
+
 /* Style for the overlay */
 #overlay {
   position: fixed;
