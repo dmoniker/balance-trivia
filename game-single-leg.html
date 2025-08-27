@@ -14,7 +14,7 @@
   <body>
     <div id="content-container">
       <video id="background-video" autoplay loop muted playsinline>
-        <source src="single-leg-left.mp4" type="video/mp4" />
+        <source src="single-leg-left-4k.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div id="intro-section">
@@ -38,7 +38,7 @@
         <footer>
           <button
             id="challenge-toggle2"
-            onclick="window.location.replace('game-tandem.html')"
+            onclick="window.location.replace('game-single-leg.html')"
             style="padding: 16px 0"
           >
             Easier exercise
@@ -48,11 +48,7 @@
           </button>
         </footer>
       </div>
-      <div
-        id="message-block"
-        style="display: none"
-        class="gradient-background-single gradient-background-flip-single"
-      >
+      <div id="message-block" style="display: none">
         <div id="message">Stand on right foot</div>
         <div class="timer" id="countdown-ring">
           <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
@@ -96,6 +92,7 @@
                 margin: 0 16px 0 0;
                 padding: 0px;
                 width: auto;
+                filter: brightness(0) invert(1);
               "
             >
               <img
@@ -122,7 +119,11 @@
 
           <div id="prompt-container" style="display: none">
             <div id="page-link">
-              <button class="norm" onclick="javascript:location.reload()">
+              <button
+                class="norm"
+                onclick="javascript:location.reload()"
+                style="width: 100%"
+              >
                 Done
               </button>
             </div>

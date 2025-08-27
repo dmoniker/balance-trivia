@@ -1,7 +1,7 @@
 const tandemLeftVideo = "tandem-front-left.mp4";
 const tandemRightVideo = "tandem-front-right.mp4";
-const singleLegLeftVideo = "single-leg-left.mp4";
-const singleLegRightVideo = "single-leg-right.mp4";
+const singleLegLeftVideo = "single-leg-left-4K.mp4";
+const singleLegRightVideo = "single-leg-right-4K.mp4";
 let gameEnded = false;
 let isLeftLeg = false;
 const easyQuestions = questions.filter(
@@ -56,11 +56,15 @@ function startCountdown(duration, display) {
       if (timer < 0) {
         gameEnded = true;
         clearTimeout(bannerTimeoutId);
-        document.getElementById("banner").style.display = "none";
-        hideBanner();
         document.getElementById("score-container").style.textAlign = "left";
         document.getElementById("pause-button").style.display = "none";
         document.getElementById("game-over").style.display = "block";
+
+        // Add styles to move elements down by 300px
+        document.getElementById("game-over").style.top = "300px";
+        document.getElementById("footer-top").style.top = "300px";
+        document.getElementById("content2").style.top = "300px";
+
         document.getElementById("answer-container").style.display = "none";
         document.getElementById("countdown").style.display = "none";
         document.getElementById("question-container").style.display = "none";
@@ -324,15 +328,11 @@ function displayNewQuestion() {
     answerContainer.appendChild(answer);
     answer.addEventListener("click", () => {
       totalCount++;
-      console.log("Answer clicked: ", option); // Debug: Log when an answer is clicked
 
       if (option === question.answer) {
         correctCount++;
         answer.classList.add("correct");
       } else {
-        console.log(
-          "Incorrect answer detected, preparing to show message block"
-        ); // Debug: Log if incorrect
         answer.classList.add("incorrect");
         const correctAnswer = answerContainer.querySelector(
           `.answer:not(.incorrect):not(:disabled):not(.correct)[data-answer="${question.answer}"]`
@@ -384,12 +384,10 @@ function updateBackgroundVideo() {
 
   if (source) {
     const currentSrc = source.getAttribute("src");
-    if (currentSrc.includes("single-leg-left.mp4")) {
-      source.src = "single-leg-right.mp4";
-      console.log(currentSrc);
+    if (currentSrc.includes("single-leg-left")) {
+      source.src = "single-leg-right-4K.mp4";
     } else {
-      source.src = "single-leg-left.mp4";
-      console.log(currentSrc);
+      source.src = "single-leg-left-4K.mp4";
     }
 
     video.load();
@@ -402,10 +400,10 @@ function updateBackgroundVideo() {
 function updateBannerVideo() {
   const video2 = document.getElementById("video2");
   if (video2) {
-    if (video2.src.includes("single-leg-right.mp4")) {
-      video2.src = "single-leg-left.mp4";
+    if (video2.src.includes("single-leg-right")) {
+      video2.src = "single-leg-left-4K.mp4";
     } else {
-      video2.src = "single-leg-right.mp4";
+      video2.src = "single-leg-right-4K.mp4";
     }
 
     video2.load();

@@ -209,6 +209,7 @@ main {
   color: #fff;
   border: 1px solid #007b34;
   z-index: 10;
+  align-items: center;
 }
 
 .answer.correct::before {
@@ -229,6 +230,7 @@ main {
   color: #fff;
   border: 1px solid #d32f2f;
   z-index: 10;
+  align-items: center;
 }
 
 .answer.incorrect::before {
@@ -357,6 +359,7 @@ button {
   width: 110px;
   height: 110px;
   font-size: 0.8em;
+  display: none;
 }
 
 .score-label {
@@ -373,6 +376,7 @@ button {
 .score-value {
   font-size: 2em;
   font-weight: bold;
+  color: black;
 }
 
 .score-value-today {
@@ -390,8 +394,9 @@ button {
 .score-label {
   margin-top: 10px;
   color: #3d4747;
-  width: 100%;
+  width: 80%;
   text-align: center;
+  line-height: 1;
 }
 
 .prompt p {
