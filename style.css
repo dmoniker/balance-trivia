@@ -6,6 +6,10 @@
   }
 }
 
+html {
+  background: transparent;
+}
+
 /* Style for the overlay */
 #overlay {
   position: fixed;
@@ -29,24 +33,33 @@
   padding: 0;
 }
 
-body {
-  font-family: "Quicksand", Arial, sans-serif;
-  line-height: 1.5;
-  font-size: 1.3rem;
+#page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(
       to bottom left,
       rgba(255, 255, 255, 0),
       rgba(255, 255, 255, 1)
     ),
     linear-gradient(to right top, #ededed, #aeadb6);
-  background-blend-mode: normal;
+  z-index: -1;
+}
+
+body {
+  font-family: "Quicksand", Arial, sans-serif;
+  line-height: 1.5;
+  font-size: 1.3rem;
+  background: transparent;
   max-width: 440px;
   margin: 0 auto;
   height: 100vh;
   color: white;
 }
 #content-container {
-  background-color: #fff;
+  background-color: transparent;
   height: 100%;
 }
 
@@ -166,6 +179,7 @@ main {
   gap: 1rem;
   max-width: 80%;
   width: 600px;
+  max-width: min(90vw, 600px); /* Made responsive */
 }
 
 .answer {
@@ -205,18 +219,19 @@ main {
   display: flex; /* Use flexbox */
   position: relative;
   justify-content: center;
-  background-color: #007b34;
-  color: #fff;
-  border: 1px solid #007b34;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #fff;
   z-index: 10;
   align-items: center;
 }
 
 .answer.correct::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: min(20px); /* Changed from 20px */
+  height: min(20px); /* Changed from 20px */
   background-image: url("correct.png");
+  filter: brightness(0);
   background-size: contain;
   background-repeat: no-repeat;
   margin-right: 8px;
@@ -226,22 +241,24 @@ main {
   display: flex; /* Use flexbox */
   position: relative;
   justify-content: center;
-  background-color: #d32f2f;
-  color: #fff;
-  border: 1px solid #d32f2f;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #fff;
   z-index: 10;
   align-items: center;
+  text-decoration: line-through;
 }
 
-.answer.incorrect::before {
+/* .answer.incorrect::before {
   content: "";
-  width: 20px;
-  height: 20px;
+  width: min(20px); 
+  height: min(20px); 
   background-image: url("close.png");
   background-size: contain;
   background-repeat: no-repeat;
   margin-right: 8px;
-}
+  filter: brightness(0);
+} */
 
 .answer[disabled] {
   cursor: default;
@@ -310,7 +327,7 @@ button {
   text-align: center;
   font-size: 1.8rem;
   display: none;
-  padding: 64px 0;
+  padding: 64px 0; /* Changed from 64px 0 */
   z-index: 10;
   position: relative;
 }
@@ -348,16 +365,16 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 130px;
-  height: 130px;
+  width: min(130px); /* Changed from 130px */
+  height: min(130px); /* Changed from 130px */
   border-radius: 50%;
   background: var(--primary-circle-color);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .score-circle.small {
-  width: 110px;
-  height: 110px;
+  width: min(12vw, 110px); /* Changed from 110px */
+  height: min(12vw, 110px); /* Changed from 110px */
   font-size: 0.8em;
   display: none;
 }
@@ -403,10 +420,9 @@ button {
   margin-bottom: 16px;
 }
 
-/* Centered Circle with Coin Background */
 .gold-coin {
-  width: 70px;
-  height: 70px;
+  width: min(8vw, 70px); /* Changed from 70px */
+  height: min(8vw, 70px); /* Changed from 70px */
   background-image: url("coin2.png"); /* Update with the correct path */
   background-size: cover; /* Ensure the image covers the whole circle */
   background-position: center; /* Center the image */
@@ -422,8 +438,8 @@ button {
 
 /* Centered Yellow Circle */
 .circle {
-  width: 70px;
-  height: 70px;
+  width: min(70px); /* Changed from 70px */
+  height: min(70px); /* Changed from 70px */
   background-color: var(--primary-circle-color);
   border-radius: 50%;
   display: flex;
@@ -475,12 +491,12 @@ section {
   margin: 32px;
   z-index: 1;
   position: relative;
-  padding-top: 200px;
+  padding-top: 200px; /* Changed from 200px */
   line-height: 2;
 }
 
 main {
-  max-width: 600px;
+  max-width: min(600px); /* Made responsive */
   position: relative;
   z-index: 1;
   margin-top: 75vw;
@@ -497,7 +513,7 @@ ol {
 header {
   text-align: center;
   position: relative;
-  top: calc(40% - 100px);
+  top: calc(40% - 100px); /* Changed from calc(40% - 100px) */
   /* animation: sway 9s ease-in-out 1; */
 }
 
@@ -514,7 +530,7 @@ header {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  backdrop-filter: blur(10px); /* Blurs the background behind the text */
+  backdrop-filter: blur(40px); /* Blurs the background behind the text */
   width: 100%;
   height: 100%;
 }

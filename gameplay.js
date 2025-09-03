@@ -23,6 +23,12 @@ const countdownDuration = 120;
 let lastScore = localStorage.getItem("lastScore") || 0;
 let highScore = localStorage.getItem("highScore") || 0;
 
+// Preload the video that isn't currently displayed to make the switch faster.
+const videoPreload = document.createElement("video");
+videoPreload.preload = "auto";
+// The initial video is single-leg-left (from HTML), so we preload the right one.
+videoPreload.src = singleLegRightVideo;
+
 function startGame() {
   document.getElementById("intro-section").style.display = "none";
   document.getElementById("message-block").style.display = "block";
@@ -62,10 +68,10 @@ function startCountdown(duration, display) {
         document.getElementById("pause-button").style.display = "none";
         document.getElementById("game-over").style.display = "block";
 
-        // Add styles to move elements down by 300px
-        document.getElementById("game-over").style.top = "300px";
-        document.getElementById("footer-top").style.top = "300px";
-        document.getElementById("content2").style.top = "300px";
+        // Add styles to move elements down by 25vh (responsive)
+        document.getElementById("game-over").style.top = "25vh";
+        document.getElementById("footer-top").style.top = "25vh";
+        document.getElementById("content2").style.top = "25vh";
 
         document.getElementById("answer-container").style.display = "none";
         document.getElementById("countdown").style.display = "none";
@@ -289,6 +295,7 @@ function showMessageBlock(customMessage, duration = 3) {
     if (content2) content2.style.display = "flex";
     if (footerTop) footerTop.style.display = "flex";
     if (header) header.style.display = "flex";
+    pauseVideo();
   };
 
   startSvgTimer(duration, onEnd);
@@ -387,13 +394,16 @@ function updateBackgroundVideo() {
   if (source) {
     const currentSrc = source.getAttribute("src");
     if (currentSrc.includes("single-leg-left")) {
-      source.src =
-        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
+      source.src = singleLegRightVideo;
+      // Preload the left video for the next potential switch
+      videoPreload.src = singleLegLeftVideo;
     } else {
-      source.src =
-        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
+      source.src = singleLegLeftVideo;
+      // Preload the right video for the next potential switch
+      videoPreload.src = singleLegRightVideo;
     }
 
+    debugger; // Paused to allow for manual inspection.
     video.load();
     video.play();
   } else {
@@ -446,6 +456,7 @@ function startInitialCountdown() {
     if (messageBlock) messageBlock.style.display = "none";
     document.getElementById("content").style.display = "block";
     startCountdown2();
+    pauseVideo();
   };
 
   startSvgTimer(3, onEnd);
