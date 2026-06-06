@@ -2,149 +2,178 @@ const tandemLeftVideo = "tandem-front-left.mp4";
 const tandemRightVideo = "tandem-front-right.mp4";
 const singleLegLeftVideo = "single-leg-left-old.mp4";
 const singleLegRightVideo = "single-leg-right-old.mp4";
+
+const isTandem = document.body.dataset.mode === "tandem";
+const DEMO_SECS = 5;
+const countdownDuration = 120;
+
 let gameEnded = false;
-let isLeftLeg = false;
-const easyQuestions = questions.filter(
-  (question) => question.difficulty === "easy"
-);
-let overlayTimeoutId;
-let bannerTimeoutId;
-let isTimerPaused = false;
+let onRight = true;
+const easyQuestions = questions.filter((q) => q.difficulty === "easy");
 let countdownIntervalId;
+let demoIntervalId;
+let switchIntervalId;
 let end = false;
 let includeHardQuestions = false;
 let correctCount = 0;
 let totalCount = 0;
 let askedQuestions = [];
-let initialCountdown = 5;
-const countdownDuration = 120;
+let timeLeft = countdownDuration;
 let lastScore = localStorage.getItem("lastScore") || 0;
 let highScore = localStorage.getItem("highScore") || 0;
 
-// Preload the video that isn't currently displayed to make the switch faster.
 const videoPreload = document.createElement("video");
 videoPreload.preload = "auto";
-// The initial video is single-leg-left (from HTML), so we preload the right one.
-videoPreload.src = singleLegRightVideo;
+videoPreload.src = isTandem ? tandemLeftVideo : singleLegRightVideo;
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function pad(n) {
+  return n < 10 ? "0" + n : "" + n;
+}
+
+function setDemoMode(mode) {
+  const readyPanel = document.getElementById("demo-ready-panel");
+  const switchPanel = document.getElementById("switch-panel");
+  const progressBar = document.getElementById("demoProgressBar");
+  if (!readyPanel || !switchPanel) return;
+
+  const isSwitch = mode === "switch";
+  readyPanel.hidden = isSwitch;
+  switchPanel.hidden = !isSwitch;
+  if (progressBar) progressBar.hidden = isSwitch;
+}
 
 function startGame() {
-  document.getElementById("intro-section").style.display = "none";
-  document.getElementById("message-block").style.display = "block";
-  restartAndPlayVideo();
-  startInitialCountdown();
+  setDemoMode("ready");
+  showScreen("demo-screen");
+  restartAndPlayVideo("demo-video");
+
+  let secs = DEMO_SECS;
+  document.getElementById("demoCount").textContent = secs;
+  document.getElementById("demoBar").style.width = "100%";
+
+  clearInterval(demoIntervalId);
+  demoIntervalId = setInterval(() => {
+    secs--;
+    document.getElementById("demoCount").textContent = secs;
+    document.getElementById("demoBar").style.width =
+      Math.round((secs / DEMO_SECS) * 100) + "%";
+    if (secs <= 0) {
+      clearInterval(demoIntervalId);
+      endDemo();
+    }
+  }, 1000);
 }
 
-function animateAndRepositionVideo() {
-  const video = document.getElementById("background-video");
-  video.style.position = "absolute";
-  video.style.opacity = "1";
+function endDemo() {
+  clearInterval(demoIntervalId);
+  setDemoMode("ready");
+  correctCount = 0;
+  totalCount = 0;
+  askedQuestions = [];
+  timeLeft = countdownDuration;
+  onRight = true;
+  end = false;
+  gameEnded = false;
+
+  document.getElementById("scoreDisp").textContent = "0";
+  updateFoot();
+  showScreen("content");
+  restartAndPlayVideo("background-video");
+  startCountdown();
+  displayNewQuestion();
 }
 
-function restartAndPlayVideo() {
-  var video = document.getElementById("background-video");
+function restartAndPlayVideo(id) {
+  const video = document.getElementById(id);
+  if (!video) return;
   video.currentTime = 0;
   video.play();
 }
 
 function pauseVideo() {
-  var video = document.getElementById("background-video");
-  video.pause();
+  const video = document.getElementById("background-video");
+  if (video) video.pause();
 }
 
-function startCountdown(duration, display) {
-  let timer = duration;
-  let minutes, seconds;
-  countdownIntervalId = setInterval(function () {
-    if (!isTimerPaused) {
-      if (end) return;
-      timer--;
+function startCountdown() {
+  clearInterval(countdownIntervalId);
+  const fill = document.getElementById("timerFill");
+  const disp = document.getElementById("countdown");
 
-      if (timer < 0) {
-        gameEnded = true;
-        clearTimeout(bannerTimeoutId);
-        const content = document.getElementById("content");
-        content.classList.remove("content-question");
-        content.classList.add("game-ended");
-        content.style.display = "flex";
-        document.getElementById("pause-button").style.display = "none";
-        document.getElementById("game-over").style.display = "block";
-        document.getElementById("answer-container").style.display = "none";
-        document.getElementById("countdown").style.display = "none";
-        document.getElementById("question-container").style.display = "none";
-        document.getElementById("header").style.display = "none";
-        document.getElementById("prompt-container").style.display = "block";
-
-        clearInterval(countdownIntervalId);
-        end = true;
-        setTimeout(function () {
-          const scoreContainer = document.getElementById("score-container");
-          scoreContainer.style.animationName = "zoomBounce";
-          scoreContainer.style.animationDuration = ".5s";
-          scoreContainer.style.animationTimingFunction = "ease-out";
-        }, 200);
-
-        const finalScore = correctCount;
-        const scoreContainer = document.getElementById("score-container");
-
-        if (finalScore > highScore) {
-          highScore = finalScore;
-          localStorage.setItem("highScore", highScore);
-        }
-
-        localStorage.setItem("lastScore", finalScore);
-
-        scoreContainer.innerHTML = `
-                <div class="score-circle small">
-                  <div class="score-label">Last Score</div>
-                  <div class="score-value">${lastScore}</div>
-                </div>
-                <div class="score-circle">
-                  <div class="score-label score-label-today">Score</div>
-                  <div class="score-value score-value-today">${finalScore}</div>
-                </div>
-                <div class="score-circle small">
-                  <div class="score-label">High Score</div>
-                  <div class="score-value">${highScore}</div>
-                </div>
-              `;
-
-        return;
-      }
-
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
-      minutes = minutes < 10 ? minutes.toString() : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
-      display.textContent = minutes + ":" + seconds;
-    }
-  }, 1000);
+  fill.classList.remove("warn");
+  disp.classList.remove("warn");
+  fill.style.width = "100%";
+  disp.textContent = "2:00";
+  resumeCountdown();
 }
 
-function togglePause() {
-  isTimerPaused = !isTimerPaused;
-  const pauseButtonImage = document.getElementById("pause-button-img");
-
-  if (isTimerPaused) {
-    pauseButtonImage.src = "play.png";
-  } else {
-    pauseButtonImage.src = "pause.png";
+function getVideoForFoot(right) {
+  if (isTandem) {
+    return right ? tandemRightVideo : tandemLeftVideo;
   }
+  return right ? singleLegLeftVideo : singleLegRightVideo;
 }
 
-document.getElementById("pause-button").addEventListener("click", togglePause);
+function setVideoSrc(videoId, src, fade) {
+  const video = document.getElementById(videoId);
+  if (!video) return;
 
-function startCountdown2() {
-  const countdownDisplay = document.getElementById("countdown");
-  startCountdown(countdownDuration, countdownDisplay);
-}
+  const source = video.querySelector("source");
+  if (!source) return;
 
-function toggleTitle() {
-  const title = document.getElementById("foot-title");
-  if (title.textContent === "Stand on left foot") {
-    title.textContent = "Stand on right foot";
-  } else {
-    title.textContent = "Stand on left foot";
+  if (source.getAttribute("src") === src) {
+    video.play().catch(() => {});
+    return;
   }
+
+  source.src = src;
+  if (fade) video.style.opacity = "0";
+  video.load();
+  video.oncanplay = () => {
+    video.play().catch(() => {});
+    if (fade) video.style.opacity = "1";
+    video.oncanplay = null;
+  };
+}
+
+function syncFootVideos(fadeBackground) {
+  const src = getVideoForFoot(onRight);
+  setVideoSrc("background-video", src, fadeBackground);
+  setVideoSrc("demo-video", src, false);
+  setVideoSrc("go-bg-video", src, false);
+  videoPreload.src = getVideoForFoot(!onRight);
+}
+
+function updateFoot() {
+  const lbl = document.getElementById("footLbl");
+  const title = document.getElementById("stanceTitle");
+  const sub = document.getElementById("stanceSub");
+  const dotA = document.getElementById("dotA");
+  const dotB = document.getElementById("dotB");
+
+  if (onRight) {
+    lbl.textContent = "RIGHT";
+    lbl.style.color = "#a78bfa";
+    title.textContent = isTandem
+      ? "Right heel in front of left toes"
+      : "Balance on right foot";
+    dotA.className = "foot-dot right-on";
+    dotB.className = "foot-dot";
+  } else {
+    lbl.textContent = "LEFT";
+    lbl.style.color = "#fbbf24";
+    title.textContent = isTandem
+      ? "Left heel in front of right toes"
+      : "Balance on left foot";
+    dotA.className = "foot-dot";
+    dotB.className = "foot-dot left-on";
+  }
+  sub.textContent = (isTandem ? "Tandem" : "Single leg") + " · stay balanced";
 }
 
 function shuffleArray(array) {
@@ -154,149 +183,10 @@ function shuffleArray(array) {
   }
 }
 
-function selectRandomQuestion(askedQuestions) {
-  let availableQuestions = includeHardQuestions ? questions : easyQuestions;
-  availableQuestions = availableQuestions.filter(
-    (question) => !askedQuestions.includes(question)
-  );
-  return availableQuestions[
-    Math.floor(Math.random() * availableQuestions.length)
-  ];
-}
-
-function toggleChallenge() {
-  includeHardQuestions = !includeHardQuestions;
-  document.getElementById("challenge-toggle").textContent = includeHardQuestions
-    ? "Less hard"
-    : "Harder";
-  refreshQuestions();
-}
-
-function refreshQuestions() {
-  askedQuestions = [];
-  correctCount = 0;
-  totalCount = 0;
-  displayNewQuestion();
-}
-
-function preloadImages(imageArray) {
-  imageArray.forEach((imageSrc) => {
-    const img = new Image();
-    img.src = imageSrc;
-  });
-}
-
-// SVG TIMER LOGIC
-let timerAnimationId = null;
-let timerEndTime = 0;
-let timerDuration = 0;
-let onTimerEndCallback = null;
-
-function updateSvgTimer(currentTime) {
-  const timerCircleEl = document.querySelector("#countdown-ring .timer-circle");
-  const timerTextEl = document.getElementById("countdown-number");
-  const remainingTime = timerEndTime - currentTime;
-
-  if (remainingTime <= 0) {
-    if (timerTextEl) timerTextEl.textContent = 0;
-    if (timerCircleEl) {
-      const radius = timerCircleEl.r.baseVal.value;
-      const circumference = 2 * Math.PI * radius;
-      timerCircleEl.style.strokeDashoffset = circumference;
-    }
-    if (onTimerEndCallback) onTimerEndCallback();
-    cancelAnimationFrame(timerAnimationId);
-    timerAnimationId = null;
-    return;
-  }
-
-  const elapsed = timerDuration * 1000 - remainingTime;
-  const progress = elapsed / (timerDuration * 1000);
-
-  if (timerCircleEl) {
-    const radius = timerCircleEl.r.baseVal.value;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference * progress;
-    timerCircleEl.style.strokeDashoffset = offset;
-  }
-
-  if (timerTextEl) {
-    timerTextEl.textContent = Math.ceil(remainingTime / 1000);
-  }
-
-  timerAnimationId = requestAnimationFrame(updateSvgTimer);
-}
-
-function startSvgTimer(duration, onEnd) {
-  if (timerAnimationId) cancelAnimationFrame(timerAnimationId);
-
-  const timerCircleEl = document.querySelector("#countdown-ring .timer-circle");
-  const timerTextEl = document.getElementById("countdown-number");
-
-  if (!timerCircleEl) {
-    console.error("Timer circle SVG element not found!");
-    return;
-  }
-
-  const radius = timerCircleEl.r.baseVal.value;
-  const circumference = 2 * Math.PI * radius;
-  timerCircleEl.style.strokeDasharray = circumference;
-  timerCircleEl.style.strokeDashoffset = 0;
-
-  timerDuration = duration;
-  timerEndTime = performance.now() + duration * 1000;
-  onTimerEndCallback = onEnd;
-
-  if (timerTextEl) timerTextEl.textContent = duration;
-
-  timerAnimationId = requestAnimationFrame(updateSvgTimer);
-}
-
-function showMessageBlock(customMessage, duration = 3) {
-  const messageBlock = document.getElementById("message-block");
-  const messageElement = document.getElementById("message");
-  const contentDiv = document.getElementById("content");
-  const content2 = document.getElementById("content2");
-  const footerTop = document.getElementById("footer-top");
-  const header = document.getElementById("header");
-
-  messageBlock.style.display = "block";
-  if (contentDiv) contentDiv.classList.remove("text-2");
-  if (content2) content2.style.display = "none";
-  if (footerTop) footerTop.style.display = "none";
-  if (header) header.style.display = "none";
-
-  if (customMessage === "Switch feet") {
-    updateBackgroundVideo();
-    toggleTitle();
-  }
-
-  if (messageElement) {
-    messageElement.textContent = customMessage;
-  }
-
-  const onEnd = () => {
-    messageBlock.style.display = "none";
-    if (contentDiv) contentDiv.classList.add("text-2");
-    if (content2) content2.style.display = "flex";
-    if (footerTop) footerTop.style.display = "flex";
-    if (header) header.style.display = "flex";
-    pauseVideo();
-  };
-
-  startSvgTimer(duration, onEnd);
-}
-
-function hideBanner() {
-  const banner = document.getElementById("banner");
-  banner.classList.add("banner-hidden");
-  document.getElementById("footer-top").style.display = "flex";
-  document.getElementById("content2").style.opacity = "1";
-  document.getElementById("content").classList.add("content-question");
-
-  isLeftLeg = !isLeftLeg;
-  toggleTitle();
-  pauseVideo();
+function selectRandomQuestion(asked) {
+  let available = includeHardQuestions ? questions : easyQuestions;
+  available = available.filter((q) => !asked.includes(q));
+  return available[Math.floor(Math.random() * available.length)];
 }
 
 function displayNewQuestion() {
@@ -310,142 +200,123 @@ function displayNewQuestion() {
   askedQuestions.push(question);
   shuffleArray(question.options);
 
-  const questionContainer = document.querySelector(".question-container");
-  questionContainer.textContent = question.question;
+  totalCount++;
+  document.getElementById("qNum").textContent = "Question " + totalCount;
+  document.getElementById("question-container").textContent = question.question;
 
-  const answerContainer = document.querySelector(".answer-container");
+  const answerContainer = document.getElementById("answer-container");
   answerContainer.innerHTML = "";
+  const letters = ["A", "B", "C", "D"];
 
-  question.options.forEach((option) => {
-    const answer = document.createElement("button");
-    answer.classList.add("answer");
-    answer.textContent = option;
-    answerContainer.appendChild(answer);
-    answer.addEventListener("click", () => {
-      totalCount++;
-
-      if (option === question.answer) {
-        correctCount++;
-        answer.classList.add("correct");
-      } else {
-        answer.classList.add("incorrect");
-        const correctAnswer = answerContainer.querySelector(
-          `.answer:not(.incorrect):not(:disabled):not(.correct)[data-answer="${question.answer}"]`
-        );
-        if (correctAnswer) {
-          correctAnswer.classList.add("correct");
-        }
-
-        toggleGradientClasses();
-        setTimeout(() => {
-          showMessageBlock("Switch feet", 10);
-        }, 1000);
-      }
-
-      answerContainer
-        .querySelectorAll(".answer:not(.correct)")
-        .forEach((answer) => {
-          answer.disabled = true;
-        });
-
-      const correctCountElement = document.querySelector(".correct-count");
-      const totalCountElement = document.querySelector(".total-count");
-      correctCountElement.textContent = correctCount;
-      totalCountElement.textContent = totalCount;
-
-      setTimeout(displayNewQuestion, 1000);
-    });
-
-    answer.setAttribute("data-answer", option);
+  question.options.forEach((option, i) => {
+    const btn = document.createElement("button");
+    btn.className = "ans-btn";
+    btn.innerHTML = `<span class="ans-letter">${letters[i]}</span>${option}`;
+    btn.setAttribute("data-answer", option);
+    btn.addEventListener("click", () => handleAnswer(btn, option, question));
+    answerContainer.appendChild(btn);
   });
 }
 
-displayNewQuestion();
+function handleAnswer(btn, chosen, question) {
+  document.querySelectorAll(".ans-btn").forEach((b) => (b.disabled = true));
+
+  if (chosen === question.answer) {
+    btn.classList.add("correct");
+    correctCount++;
+    document.getElementById("scoreDisp").textContent = correctCount;
+    setTimeout(displayNewQuestion, 900);
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll(".ans-btn").forEach((b) => {
+      if (b.getAttribute("data-answer") === question.answer) {
+        b.classList.add("correct");
+      }
+    });
+    setTimeout(triggerSwitch, 800);
+  }
+}
+
+function triggerSwitch() {
+  clearInterval(countdownIntervalId);
+  onRight = !onRight;
+  syncFootVideos(true);
+  setDemoMode("switch");
+  showScreen("demo-screen");
+  restartAndPlayVideo("demo-video");
+
+  let c = 3;
+  document.getElementById("swCount").textContent = c;
+  clearInterval(switchIntervalId);
+  switchIntervalId = setInterval(() => {
+    c--;
+    document.getElementById("swCount").textContent = c;
+    if (c <= 0) {
+      clearInterval(switchIntervalId);
+      setDemoMode("ready");
+      updateFoot();
+      showScreen("content");
+      restartAndPlayVideo("background-video");
+      displayNewQuestion();
+      resumeCountdown();
+    }
+  }, 1000);
+}
+
+function resumeCountdown() {
+  clearInterval(countdownIntervalId);
+  const fill = document.getElementById("timerFill");
+  const disp = document.getElementById("countdown");
+
+  countdownIntervalId = setInterval(() => {
+    if (end) return;
+    timeLeft--;
+
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    disp.textContent = m + ":" + pad(s);
+    fill.style.width = Math.round((timeLeft / countdownDuration) * 100) + "%";
+
+    if (timeLeft <= 30) {
+      disp.classList.add("warn");
+      fill.classList.add("warn");
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(countdownIntervalId);
+      endGame();
+    }
+  }, 1000);
+}
+
+function endGame() {
+  end = true;
+  gameEnded = true;
+
+  const finalScore = correctCount;
+  if (finalScore > highScore) {
+    highScore = finalScore;
+    localStorage.setItem("highScore", highScore);
+  }
+  localStorage.setItem("lastScore", finalScore);
+
+  document.getElementById("goScore").textContent = finalScore;
+  document.getElementById("goCorrect").textContent = correctCount + " / " + totalCount;
+  document.getElementById("goMode").textContent = isTandem ? "Tandem" : "Single Leg";
+
+  showScreen("game-over-screen");
+  syncFootVideos(false);
+  restartAndPlayVideo("go-bg-video");
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-  const title = document.querySelector(".title");
-  title.addEventListener("click", function () {
-    localStorage.removeItem("lastScore");
-    localStorage.removeItem("highScore");
-    lastScore = 0;
-    highScore = 0;
-    location.reload();
-  });
+  const badge = document.querySelector(".intro-badge");
+  if (badge) {
+    badge.addEventListener("click", function () {
+      localStorage.removeItem("lastScore");
+      localStorage.removeItem("highScore");
+      lastScore = 0;
+      highScore = 0;
+    });
+  }
 });
-
-function updateBackgroundVideo() {
-  const video = document.getElementById("background-video");
-  const source = video.querySelector("source");
-
-  if (source) {
-    const currentSrc = source.getAttribute("src");
-    if (currentSrc.includes("single-leg-left")) {
-      source.src = singleLegRightVideo;
-      // Preload the left video for the next potential switch
-      videoPreload.src = singleLegLeftVideo;
-    } else {
-      source.src = singleLegLeftVideo;
-      // Preload the right video for the next potential switch
-      videoPreload.src = singleLegRightVideo;
-    }
-
-    video.style.opacity = "0";
-    video.load();
-    video.oncanplay = () => {
-      video.play();
-      video.style.opacity = "1";
-      video.oncanplay = null;
-    };
-  } else {
-    console.error("Video source element not found");
-  }
-}
-
-function updateBannerVideo() {
-  const video2 = document.getElementById("video2");
-  if (video2) {
-    if (video2.src.includes("single-leg-right")) {
-      video2.src = singleLegLeftVideo;
-    } else {
-      video2.src = singleLegRightVideo;
-    }
-
-    video2.load();
-    video2.play();
-  } else {
-    console.error("Banner video element not found");
-  }
-}
-
-function toggleGradientClasses() {
-  const elementsToToggle = document.querySelectorAll(
-    ".gradient-background-single"
-  );
-
-  elementsToToggle.forEach((element) => {
-    if (element.classList.contains("gradient-background-flip-single")) {
-      element.classList.remove("gradient-background-flip-single");
-    } else {
-      element.classList.add("gradient-background-flip-single");
-    }
-  });
-}
-
-function startInitialCountdown() {
-  const messageBlock = document.getElementById("message-block");
-  const messageElement = document.getElementById("message");
-
-  if (messageElement) {
-    messageElement.textContent = "Stand on right foot";
-  }
-  messageBlock.style.display = "block";
-
-  const onEnd = () => {
-    if (messageBlock) messageBlock.style.display = "none";
-    document.getElementById("content").style.display = "flex";
-    startCountdown2();
-    pauseVideo();
-  };
-
-  startSvgTimer(3, onEnd);
-}

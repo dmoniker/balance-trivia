@@ -1,152 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
     />
-    <meta charset="UTF-8" />
     <link rel="icon" href="favicon.png" type="image/png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Trivia Game</title>
+    <title>Balance & Trivia</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="light-video">
-    <div id="page-background"></div>
-    <div id="content-container">
-      <video id="background-video" autoplay loop muted playsinline>
-        <source
-          src="single-leg-left-old.mp4"
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
-      <div id="intro-section">
-        <header>
-          <h1 class="title text">Balance & Trivia</h1>
-        </header>
-        <section class="section">
-          <p style="margin-bottom: 16px; display: none">
-            Improve your balance and cognitive strength by challenging your
-            hand, eye, mind and body coordination at the same time!
-          </p>
-          <ol>
-            <li>Find a flat surface to stand on</li>
-            <li>Balance on your right foot</li>
-            <li>Answer the trivia question</li>
-            <li>If correct, keep balancing</li>
-            <li>If incorrect, switch feet</li>
-            <li>You have two minutes.</li>
-          </ol>
-        </section>
-        <div style="height: 200px"></div>
-        <footer>
-          <button
-            id="challenge-toggle2"
-            onclick="window.location.replace('game-tandem.html')"
-            style="padding: 16px 0"
-          >
-            Easier exercise
-          </button>
-          <button class="norm" onclick="startGame();" class="answer">
-            Begin
-          </button>
-        </footer>
-      </div>
-      <div id="message-block" style="display: none">
-        <div id="message">Stand on right foot</div>
-        <div class="timer" id="countdown-ring">
-          <svg class="timer-svg" width="200" height="200" viewBox="0 0 200 200">
-            <circle class="timer-circle-bg" cx="100" cy="100" r="90"></circle>
-            <circle class="timer-circle" cx="100" cy="100" r="90"></circle>
-          </svg>
-          <div class="timer-text" id="countdown-number">3</div>
+  <body data-mode="single">
+    <div class="shell">
+      <!-- INTRO -->
+      <div class="screen active" id="intro-section">
+        <div class="intro-hero">
+          <video autoplay muted loop playsinline>
+            <source src="single-leg-left-old.mp4" type="video/mp4" />
+          </video>
+          <div class="intro-badge">Trivia & Balance</div>
+          <div class="intro-heading">
+            <h1>Stand.<br /><span>Think.</span></h1>
+          </div>
         </div>
-        <div id="initial-countdown"></div>
+        <div class="intro-body">
+          <div class="diff-row">
+            <a class="diff-card" href="game-tandem.html">
+              <div class="diff-mode easy">Tandem</div>
+              <div class="diff-desc">Heel-to-toe stance. Great for building stability.</div>
+            </a>
+            <div class="diff-card sel">
+              <div class="diff-mode hard">Single Leg</div>
+              <div class="diff-desc">One foot only. Maximum challenge mode.</div>
+            </div>
+          </div>
+          <div class="rules-grid">
+            <div class="rule-chip"><b>→ Answer</b>Correct: keep your stance</div>
+            <div class="rule-chip"><b>⇄ Switch</b>Wrong: swap feet</div>
+            <div class="rule-chip"><b>⏱ 2 min</b>Stay balanced throughout</div>
+            <div class="rule-chip"><b>★ Score</b>+1 per right answer</div>
+          </div>
+          <button class="btn-begin" onclick="startGame()">Begin →</button>
+        </div>
       </div>
 
-      <div id="content" style="display: none" class="text-2 content-question">
-        <div id="header">
-          <a href="javascript:location.reload()" id="back-button">
-            <img
-              src="left-icon.png"
-              alt="Back"
-              style="filter: brightness(0) invert(1)"
-            />
-          </a>
-          <h1 id="foot-title">Stand on right foot</h1>
+      <!-- DEMO (also used for switch-feet overlay) -->
+      <div class="screen" id="demo-screen">
+        <div class="demo-vid-wrap">
+          <video id="demo-video" autoplay muted loop playsinline>
+            <source src="single-leg-left-old.mp4" type="video/mp4" />
+          </video>
         </div>
-
-        <h1 id="game-over">Game Over</h1>
-
-        <main id="content2">
-          <div id="question-container" class="question-container">
-            <h2 class="question"></h2>
-          </div>
-
-          <div id="answer-container" class="answer-container">
-            <button class="answer"></button>
-            <button class="answer"></button>
-            <button class="answer"></button>
-            <button class="answer"></button>
-          </div>
-
-          <div id="prompt-container" style="display: none">
-            <div id="page-link">
-              <button
-                class="norm"
-                onclick="javascript:location.reload()"
-                style="width: 100%"
-              >
-                Done
-              </button>
+        <div class="demo-progress-bar" id="demoProgressBar">
+          <div class="demo-progress-fill" id="demoBar" style="width: 100%"></div>
+        </div>
+        <div class="demo-ui">
+          <div id="demo-ready-panel">
+            <div class="demo-top">
+              <div class="demo-label">Watch & Get Ready</div>
+              <button class="demo-skip" onclick="endDemo()">Skip →</button>
             </div>
-            <div class="prompt">
-              <p>Congratulations on balancing for 2 minutes.</p>
-              <p>
-                Do this exercise 3 times a week, or even daily to improve your
-                balance. And your trivia skills!
-              </p>
+            <div class="demo-bottom">
+              <div class="demo-text">
+                <div class="demo-instruction" id="demoInstruction">Stand on your right foot, lift your left</div>
+                <div class="demo-mode-pill hard-col" id="demoModePill">Single leg stance</div>
+              </div>
+              <div class="demo-countdown countdown-value" id="demoCount">5</div>
             </div>
           </div>
-        </main>
+          <div id="switch-panel" class="switch-overlay" hidden>
+            <div class="sw-label">Incorrect!</div>
+            <div class="sw-heading">Switch<br /><span>feet!</span></div>
+            <div class="sw-ring"><span class="countdown-value" id="swCount">3</span></div>
+          </div>
+        </div>
+      </div>
 
-        <div id="footer-top">
-          <div id="countdown">2:00</div>
-          <div id="score-container" class="score-container">
-            <div class="circle">
-              <div class="correct-count">0</div>
-              <div class="slash" style="display: none">/</div>
-              <div class="total-count" style="display: none">0</div>
+      <!-- QUESTION -->
+      <div class="screen" id="content">
+        <video id="background-video" autoplay loop muted playsinline class="vid-bg">
+          <source src="single-leg-left-old.mp4" type="video/mp4" />
+        </video>
+        <div class="rel-z">
+          <div class="q-header">
+            <a class="back-btn" href="javascript:location.reload()">←</a>
+            <div class="foot-pill">
+              <div class="foot-dot right-on" id="dotA"></div>
+              <div class="foot-dot" id="dotB"></div>
+              <span class="foot-lbl" id="footLbl" style="color: #a78bfa">RIGHT</span>
+            </div>
+            <div class="score-pill">★ <span id="scoreDisp">0</span></div>
+          </div>
+
+          <div class="timer-track">
+            <div class="timer-fill" id="timerFill" style="width: 100%"></div>
+          </div>
+
+          <div class="stance-card">
+            <div class="stance-icon">🦶</div>
+            <div class="stance-info">
+              <div class="stance-title" id="stanceTitle">Balance on right foot</div>
+              <div class="stance-sub" id="stanceSub">Single leg · stay balanced</div>
+            </div>
+            <div class="stance-time" id="countdown">2:00</div>
+          </div>
+
+          <div class="q-body">
+            <div class="q-num" id="qNum">Question 1</div>
+            <div class="q-text question" id="question-container"></div>
+            <div class="answers answer-container" id="answer-container"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SWITCH uses #demo-screen — see switch-panel inside demo-ui -->
+
+      <!-- GAME OVER (reuses #content with game-ended class via JS) -->
+      <div class="screen" id="game-over-screen">
+        <video id="go-bg-video" autoplay loop muted playsinline class="vid-bg">
+          <source src="single-leg-left-old.mp4" type="video/mp4" />
+        </video>
+        <div class="go-content">
+          <div class="go-eyebrow">Session complete</div>
+          <div class="go-title">Game<br /><em>Over.</em></div>
+          <div class="score-showcase">
+            <div class="score-num" id="goScore">0</div>
+            <div class="score-stats">
+              <div class="stat-row">
+                <div class="stat-label">Correct</div>
+                <div class="stat-val" id="goCorrect">0 / 0</div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label">Balanced</div>
+                <div class="stat-val" id="goBalanced">2:00</div>
+              </div>
+              <div class="stat-row">
+                <div class="stat-label">Mode</div>
+                <div class="stat-val" id="goMode">Single Leg</div>
+              </div>
             </div>
           </div>
-          <div id="pause">
-            <button
-              id="pause-button"
-              style="
-                background: none;
-                border: none;
-                cursor: pointer;
-                margin: 0 16px 0 0;
-                padding: 0px;
-                width: auto;
-                filter: brightness(0) invert(1);
-              "
-            >
-              <img
-                id="pause-button-img"
-                src="pause.png"
-                alt="Pause"
-                style="width: 48px; height: 48px"
-              />
-            </button>
+          <div class="go-tip">
+            <strong>Nice session!</strong> Try this 3× a week — or daily — to build real balance improvements alongside your trivia skills.
           </div>
+          <button class="btn-again" onclick="location.reload()">Play Again →</button>
+          <a class="btn-mode" href="game-tandem.html">Change Mode</a>
         </div>
       </div>
     </div>
-    <!--  <footer>
-    <p>&copy; 2023 Trivia Balance</p>
-  </footer> -->
+
     <script src="trivia-data-expanded3.js"></script>
     <script src="gameplay.js"></script>
   </body>
