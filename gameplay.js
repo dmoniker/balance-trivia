@@ -1,9 +1,7 @@
 const tandemLeftVideo = "tandem-front-left.mp4";
 const tandemRightVideo = "tandem-front-right.mp4";
-const singleLegLeftVideo =
-  "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
-const singleLegRightVideo =
-  "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
+const singleLegLeftVideo = "single-leg-left-old.mp4";
+const singleLegRightVideo = "single-leg-right-old.mp4";
 let gameEnded = false;
 let isLeftLeg = false;
 const easyQuestions = questions.filter(
@@ -64,29 +62,17 @@ function startCountdown(duration, display) {
       if (timer < 0) {
         gameEnded = true;
         clearTimeout(bannerTimeoutId);
-        document.getElementById("score-container").style.textAlign = "left";
+        const content = document.getElementById("content");
+        content.classList.remove("content-question");
+        content.classList.add("game-ended");
+        content.style.display = "flex";
         document.getElementById("pause-button").style.display = "none";
         document.getElementById("game-over").style.display = "block";
-
-        // Add styles to move elements down by 25vh (responsive)
-        document.getElementById("game-over").style.top = "25vh";
-        document.getElementById("footer-top").style.top = "25vh";
-        document.getElementById("content2").style.top = "25vh";
-
         document.getElementById("answer-container").style.display = "none";
         document.getElementById("countdown").style.display = "none";
         document.getElementById("question-container").style.display = "none";
         document.getElementById("header").style.display = "none";
         document.getElementById("prompt-container").style.display = "block";
-        document.getElementById("footer-top").style.position = "relative";
-        document.getElementById("footer-top").style.justifyContent = "center";
-        document.getElementById("content").style.position = "relative";
-        document.getElementById("content").classList.remove("content-question");
-        const scoreElement = document.getElementById("score-container");
-        scoreElement.style.position = "relative";
-        scoreElement.style.top = "0";
-        scoreElement.style.transform = "scale(1)";
-        scoreElement.style.left = "0";
 
         clearInterval(countdownIntervalId);
         end = true;
@@ -270,6 +256,15 @@ function showMessageBlock(customMessage, duration = 3) {
   const messageBlock = document.getElementById("message-block");
   const messageElement = document.getElementById("message");
   const contentDiv = document.getElementById("content");
+  const content2 = document.getElementById("content2");
+  const footerTop = document.getElementById("footer-top");
+  const header = document.getElementById("header");
+
+  messageBlock.style.display = "block";
+  if (contentDiv) contentDiv.classList.remove("text-2");
+  if (content2) content2.style.display = "none";
+  if (footerTop) footerTop.style.display = "none";
+  if (header) header.style.display = "none";
 
   if (customMessage === "Switch feet") {
     updateBackgroundVideo();
@@ -279,15 +274,6 @@ function showMessageBlock(customMessage, duration = 3) {
   if (messageElement) {
     messageElement.textContent = customMessage;
   }
-  messageBlock.style.display = "block";
-  if (contentDiv) contentDiv.classList.remove("text-2");
-
-  const content2 = document.getElementById("content2");
-  if (content2) content2.style.display = "none";
-  const footerTop = document.getElementById("footer-top");
-  if (footerTop) footerTop.style.display = "none";
-  const header = document.getElementById("header");
-  if (header) header.style.display = "none";
 
   const onEnd = () => {
     messageBlock.style.display = "none";
@@ -352,7 +338,7 @@ function displayNewQuestion() {
 
         toggleGradientClasses();
         setTimeout(() => {
-          showMessageBlock("Switch feet");
+          showMessageBlock("Switch feet", 10);
         }, 1000);
       }
 
@@ -403,8 +389,13 @@ function updateBackgroundVideo() {
       videoPreload.src = singleLegRightVideo;
     }
 
+    video.style.opacity = "0";
     video.load();
-    video.play();
+    video.oncanplay = () => {
+      video.play();
+      video.style.opacity = "1";
+      video.oncanplay = null;
+    };
   } else {
     console.error("Video source element not found");
   }
@@ -414,11 +405,9 @@ function updateBannerVideo() {
   const video2 = document.getElementById("video2");
   if (video2) {
     if (video2.src.includes("single-leg-right")) {
-      video2.src =
-        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4";
+      video2.src = singleLegLeftVideo;
     } else {
-      video2.src =
-        "https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-right-4K.mp4";
+      video2.src = singleLegRightVideo;
     }
 
     video2.load();
@@ -453,7 +442,7 @@ function startInitialCountdown() {
 
   const onEnd = () => {
     if (messageBlock) messageBlock.style.display = "none";
-    document.getElementById("content").style.display = "block";
+    document.getElementById("content").style.display = "flex";
     startCountdown2();
     pauseVideo();
   };

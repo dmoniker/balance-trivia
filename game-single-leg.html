@@ -11,12 +11,12 @@
     <title>Trivia Game</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
+  <body class="light-video">
     <div id="page-background"></div>
     <div id="content-container">
       <video id="background-video" autoplay loop muted playsinline>
         <source
-          src="https://kp4wwt3jzi5tcdpt.public.blob.vercel-storage.com/single-leg-left-4K.mp4"
+          src="single-leg-left-old.mp4"
           type="video/mp4"
         />
         Your browser does not support the video tag.
@@ -36,13 +36,14 @@
             <li>Answer the trivia question</li>
             <li>If correct, keep balancing</li>
             <li>If incorrect, switch feet</li>
+            <li>You have two minutes.</li>
           </ol>
         </section>
         <div style="height: 200px"></div>
         <footer>
           <button
             id="challenge-toggle2"
-            onclick="window.location.replace('game-single-leg.html')"
+            onclick="window.location.replace('game-tandem.html')"
             style="padding: 16px 0"
           >
             Easier exercise
@@ -77,37 +78,6 @@
         </div>
 
         <h1 id="game-over">Game Over</h1>
-        <div id="footer-top">
-          <div id="countdown">2:00</div>
-          <div id="score-container" class="score-container">
-            <div class="circle">
-              <div class="correct-count">0</div>
-              <div class="slash" style="display: none">/</div>
-              <div class="total-count" style="display: none">0</div>
-            </div>
-          </div>
-          <div id="pause">
-            <button
-              id="pause-button"
-              style="
-                background: none;
-                border: none;
-                cursor: pointer;
-                margin: 0 16px 0 0;
-                padding: 0px;
-                width: auto;
-                filter: brightness(0) invert(1);
-              "
-            >
-              <img
-                id="pause-button-img"
-                src="pause.png"
-                alt="Pause"
-                style="width: 48px; height: 48px"
-              />
-            </button>
-          </div>
-        </div>
 
         <main id="content2">
           <div id="question-container" class="question-container">
@@ -140,6 +110,38 @@
             </div>
           </div>
         </main>
+
+        <div id="footer-top">
+          <div id="countdown">2:00</div>
+          <div id="score-container" class="score-container">
+            <div class="circle">
+              <div class="correct-count">0</div>
+              <div class="slash" style="display: none">/</div>
+              <div class="total-count" style="display: none">0</div>
+            </div>
+          </div>
+          <div id="pause">
+            <button
+              id="pause-button"
+              style="
+                background: none;
+                border: none;
+                cursor: pointer;
+                margin: 0 16px 0 0;
+                padding: 0px;
+                width: auto;
+                filter: brightness(0) invert(1);
+              "
+            >
+              <img
+                id="pause-button-img"
+                src="pause.png"
+                alt="Pause"
+                style="width: 48px; height: 48px"
+              />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <!--  <footer>
