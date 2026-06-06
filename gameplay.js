@@ -403,7 +403,6 @@ function updateBackgroundVideo() {
       videoPreload.src = singleLegRightVideo;
     }
 
-    debugger; // Paused to allow for manual inspection.
     video.load();
     video.play();
   } else {
