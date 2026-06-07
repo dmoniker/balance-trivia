@@ -22,9 +22,43 @@ let timeLeft = countdownDuration;
 let lastScore = localStorage.getItem("lastScore") || 0;
 let highScore = localStorage.getItem("highScore") || 0;
 
-const videoPreload = document.createElement("video");
-videoPreload.preload = "auto";
-videoPreload.src = isTandem ? tandemLeftVideo : singleLegRightVideo;
+const preloadedVideos = new Map();
+const readyVideos = new Set();
+
+function getModeVideos() {
+  return isTandem
+    ? [tandemLeftVideo, tandemRightVideo]
+    : [singleLegLeftVideo, singleLegRightVideo];
+}
+
+function markVideoReady(src) {
+  if (src) readyVideos.add(src);
+}
+
+function preloadVideo(src) {
+  if (preloadedVideos.has(src)) return;
+  const video = document.createElement("video");
+  video.preload = "auto";
+  video.muted = true;
+  video.playsInline = true;
+  video.src = src;
+  video.addEventListener("canplaythrough", () => markVideoReady(src), { once: true });
+  video.load();
+  preloadedVideos.set(src, video);
+}
+
+function preloadAllVideos() {
+  getModeVideos().forEach(preloadVideo);
+}
+
+function warmVisibleVideo(video) {
+  if (!video) return;
+  video.preload = "auto";
+  const src = video.querySelector("source")?.getAttribute("src");
+  if (!src) return;
+  video.addEventListener("canplaythrough", () => markVideoReady(src), { once: true });
+  video.load();
+}
 
 function showScreen(id) {
   document.querySelectorAll(".screen").forEach((s) => s.classList.remove("active"));
@@ -132,6 +166,25 @@ function setVideoSrc(videoId, src, fade) {
   }
 
   source.src = src;
+  const isReady = readyVideos.has(src);
+
+  if (isReady) {
+    video.load();
+    const startPlayback = () => {
+      video.style.opacity = "1";
+      video.play().catch(() => {});
+    };
+    if (video.readyState >= 3) {
+      startPlayback();
+    } else {
+      video.oncanplay = () => {
+        startPlayback();
+        video.oncanplay = null;
+      };
+    }
+    return;
+  }
+
   if (fade) video.style.opacity = "0";
   video.load();
   video.oncanplay = () => {
@@ -143,10 +196,10 @@ function setVideoSrc(videoId, src, fade) {
 
 function syncFootVideos(fadeBackground) {
   const src = getVideoForFoot(onRight);
-  setVideoSrc("background-video", src, fadeBackground);
+  const instant = readyVideos.has(src);
+  setVideoSrc("background-video", src, fadeBackground && !instant);
   setVideoSrc("demo-video", src, false);
   setVideoSrc("go-bg-video", src, false);
-  videoPreload.src = getVideoForFoot(!onRight);
 }
 
 function updateFoot() {
@@ -310,6 +363,12 @@ function endGame() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  preloadAllVideos();
+  warmVisibleVideo(document.querySelector(".intro-hero video"));
+  ["demo-video", "background-video", "go-bg-video"].forEach((id) => {
+    warmVisibleVideo(document.getElementById(id));
+  });
+
   const badge = document.querySelector(".intro-badge");
   if (badge) {
     badge.addEventListener("click", function () {

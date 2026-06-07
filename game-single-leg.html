@@ -9,13 +9,15 @@
     <link rel="icon" href="favicon.png" type="image/png" />
     <title>Balance & Trivia</title>
     <link rel="stylesheet" href="style.css" />
+    <link rel="preload" as="video" type="video/mp4" href="single-leg-left-old.mp4" />
+    <link rel="preload" as="video" type="video/mp4" href="single-leg-right-old.mp4" />
   </head>
   <body data-mode="single">
     <div class="shell">
       <!-- INTRO -->
       <div class="screen active" id="intro-section">
         <div class="intro-hero">
-          <video autoplay muted loop playsinline>
+          <video autoplay muted loop playsinline preload="auto">
             <source src="single-leg-left-old.mp4" type="video/mp4" />
           </video>
           <div class="intro-badge">Trivia & Balance</div>
@@ -47,7 +49,7 @@
       <!-- DEMO (also used for switch-feet overlay) -->
       <div class="screen" id="demo-screen">
         <div class="demo-vid-wrap">
-          <video id="demo-video" autoplay muted loop playsinline>
+          <video id="demo-video" autoplay muted loop playsinline preload="auto">
             <source src="single-leg-left-old.mp4" type="video/mp4" />
           </video>
         </div>
@@ -78,7 +80,7 @@
 
       <!-- QUESTION -->
       <div class="screen" id="content">
-        <video id="background-video" autoplay loop muted playsinline class="vid-bg">
+        <video id="background-video" autoplay loop muted playsinline preload="auto" class="vid-bg">
           <source src="single-leg-left-old.mp4" type="video/mp4" />
         </video>
         <div class="rel-z">
@@ -117,7 +119,7 @@
 
       <!-- GAME OVER (reuses #content with game-ended class via JS) -->
       <div class="screen" id="game-over-screen">
-        <video id="go-bg-video" autoplay loop muted playsinline class="vid-bg">
+        <video id="go-bg-video" autoplay loop muted playsinline preload="auto" class="vid-bg">
           <source src="single-leg-left-old.mp4" type="video/mp4" />
         </video>
         <div class="go-content">
