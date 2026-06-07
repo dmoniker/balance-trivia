@@ -19,6 +19,7 @@ let correctCount = 0;
 let totalCount = 0;
 let askedQuestions = [];
 let timeLeft = countdownDuration;
+let isPaused = false;
 let lastScore = localStorage.getItem("lastScore") || 0;
 let highScore = localStorage.getItem("highScore") || 0;
 
@@ -115,6 +116,7 @@ function endDemo() {
   gameEnded = false;
 
   document.getElementById("scoreDisp").textContent = "0";
+  resetPauseState();
   updateFoot();
   showScreen("content");
   restartAndPlayVideo("background-video");
@@ -132,6 +134,52 @@ function restartAndPlayVideo(id) {
 function pauseVideo() {
   const video = document.getElementById("background-video");
   if (video) video.pause();
+}
+
+function resetPauseState() {
+  isPaused = false;
+  const btn = document.getElementById("pauseBtn");
+  if (!btn) return;
+  btn.textContent = "⏸";
+  btn.setAttribute("aria-label", "Pause game");
+  btn.classList.remove("paused");
+}
+
+function togglePause() {
+  if (gameEnded || end) return;
+
+  const btn = document.getElementById("pauseBtn");
+  if (!btn) return;
+
+  isPaused = !isPaused;
+
+  if (isPaused) {
+    clearInterval(countdownIntervalId);
+    pauseVideo();
+    document.querySelectorAll(".ans-btn").forEach((b) => {
+      if (!b.disabled) {
+        b.disabled = true;
+        b.dataset.pausedDisabled = "1";
+      }
+    });
+    btn.textContent = "▶";
+    btn.setAttribute("aria-label", "Resume game");
+    btn.classList.add("paused");
+    return;
+  }
+
+  resumeCountdown();
+  const video = document.getElementById("background-video");
+  if (video) video.play().catch(() => {});
+  document.querySelectorAll(".ans-btn").forEach((b) => {
+    if (b.dataset.pausedDisabled === "1") {
+      b.disabled = false;
+      delete b.dataset.pausedDisabled;
+    }
+  });
+  btn.textContent = "⏸";
+  btn.setAttribute("aria-label", "Pause game");
+  btn.classList.remove("paused");
 }
 
 function startCountdown() {
@@ -292,6 +340,7 @@ function handleAnswer(btn, chosen, question) {
 
 function triggerSwitch() {
   clearInterval(countdownIntervalId);
+  resetPauseState();
   onRight = !onRight;
   syncFootVideos(true);
   setDemoMode("switch");
@@ -318,6 +367,8 @@ function triggerSwitch() {
 
 function resumeCountdown() {
   clearInterval(countdownIntervalId);
+  if (isPaused) return;
+
   const fill = document.getElementById("timerFill");
   const disp = document.getElementById("countdown");
 
@@ -345,6 +396,7 @@ function resumeCountdown() {
 function endGame() {
   end = true;
   gameEnded = true;
+  resetPauseState();
 
   const finalScore = correctCount;
   if (finalScore > highScore) {
