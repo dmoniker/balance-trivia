@@ -152,7 +152,10 @@ html, body {
 /* ════════════════════════════
    DEMO SCREEN
 ════════════════════════════ */
-#demo-screen { position: relative; background: #000; width: 100%; align-self: stretch; }
+#demo-screen {
+  position: relative; background: #000; width: 100%; align-self: stretch;
+  min-height: 100svh;
+}
 
 .demo-vid-wrap {
   position: absolute; inset: 0;
@@ -164,7 +167,9 @@ html, body {
 }
 
 .demo-progress-bar {
-  position: absolute; top: 0; left: 0; right: 0;
+  position: absolute;
+  top: env(safe-area-inset-top, 0px);
+  left: 0; right: 0;
   height: 3px; background: rgba(255,255,255,0.08); z-index: 10;
 }
 .demo-progress-fill {
@@ -176,8 +181,12 @@ html, body {
 .demo-ui {
   position: relative; z-index: 5;
   display: flex; flex-direction: column;
-  height: 100%; padding: 24px 20px 28px;
-  min-height: 100vh;
+  height: 100%;
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  padding-right: calc(20px + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(44px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(20px + env(safe-area-inset-left, 0px));
+  min-height: 100svh;
   width: 100%;
   box-sizing: border-box;
 }
@@ -188,7 +197,9 @@ html, body {
   justify-content: space-between;
   flex: 1;
   width: 100%;
-  min-height: calc(100vh - 52px);
+  min-height: calc(
+    100svh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)
+  );
 }
 
 #demo-ready-panel[hidden] {
@@ -205,13 +216,26 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 22px;
-  padding: 40px;
+  padding-top: calc(40px + env(safe-area-inset-top, 0px));
+  padding-right: calc(40px + env(safe-area-inset-right, 0px));
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+  padding-left: calc(40px + env(safe-area-inset-left, 0px));
   pointer-events: none;
 }
 
 .switch-overlay[hidden] {
   display: none;
 }
+
+@supports (-webkit-touch-callout: none) {
+  .demo-ui {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  }
+  .demo-bottom {
+    margin-bottom: 8px;
+  }
+}
+
 .demo-top { display: flex; justify-content: space-between; align-items: center; }
 
 .demo-label {
